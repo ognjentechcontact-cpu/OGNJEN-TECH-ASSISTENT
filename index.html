@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ognjen Tech Assistant - Arhivski Master</title>
+    <title>Ognjen Tech Assistant - Arhivski Sistem v5</title>
     <style>
         /* Profesionalna Svetla Tema */
         :root {
@@ -75,6 +75,17 @@
             border: 1px solid rgba(0,0,0,0.3);
         }
 
+        .doc-link-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid var(--border-color);
+            margin-bottom: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .doc-link-item:hover { background: #e2e6ea; }
+
         /* Main Content */
         #main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         header {
@@ -92,15 +103,15 @@
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
         label { font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; color: #333; }
         
-        /* Interaktivni elementi */
+        /* Interaktivna polja za kucanje */
         .interactive-row {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             flex-direction: column;
         }
         .interactive-row label {
             font-family: 'Courier New', Courier, monospace;
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #000;
             text-transform: uppercase;
             margin-bottom: 4px;
@@ -108,7 +119,7 @@
         }
         .interactive-row input, .interactive-row textarea, .interactive-row select {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             font-family: 'Courier New', Courier, monospace;
             font-size: 1.05rem;
             border: 1px dashed #555;
@@ -133,68 +144,79 @@
         .doc-canvas {
             background: #fff;
             color: #000;
-            padding: 50px;
+            padding: 40px;
             border: 2px solid #000;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             margin-top: 25px;
-            min-height: 850px;
+            width: 100%;
+            max-width: 800px;
+            min-height: 1050px; /* Standardna A4 proporcija na ekranu */
+            position: relative;
         }
-        /* Posebna klasa za kratku potvrdu na pola strane */
+        
+        /* Pola papira - striktno ograničenje visine */
         .half-page {
             min-height: 500px !important;
-            max-height: 550px !important;
-            border-bottom: 3px dashed #000; /* Označava rez na pola strane */
+            max-height: 520px !important;
+            overflow: hidden;
+            border-bottom: 3px dashed #000 !important;
         }
 
         .doc-system-header {
             display: flex;
             align-items: center;
             border-bottom: 3px double #000;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
         .doc-system-header img {
-            width: 85px;
-            height: 85px;
-            margin-right: 20px;
+            width: 70px;
+            height: 70px;
+            margin-right: 25px;
             border: 1px solid #000;
         }
-        .doc-header-info h2 { font-size: 1.5rem; font-weight: bold; }
-        .doc-header-info p { font-size: 0.9rem; margin-top: 3px; }
+        .doc-header-info h2 { font-size: 1.4rem; font-weight: bold; }
+        .doc-header-info p { font-size: 0.85rem; margin-top: 2px; }
 
         .stamp-box {
             border: 2px solid #000;
-            width: 150px;
-            height: 150px;
+            width: 130px;
+            height: 130px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-align: center;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
         }
 
-        /* Sekcija za boju */
         .color-picker-container { display: flex; gap: 15px; margin-top: 5px; margin-bottom: 15px; }
         .color-square { width: 40px; height: 40px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
         .color-square.selected { border-color: #000; transform: scale(1.05); }
 
-        .scanned-images-container img { max-width: 150px; margin-top: 10px; border: 1px solid var(--border-color); }
+        .scanned-images-container img { max-width: 130px; margin-top: 10px; border: 1px solid var(--border-color); }
 
-        /* Stilovi za štampu */
+        /* Precizna podešavanja za štampu */
         @media print {
             body * { visibility: hidden; }
             #print-zone, #print-zone * { visibility: visible; }
             #print-zone { position: absolute; left: 0; top: 0; width: 100%; }
-            .doc-canvas { border: 2px solid #000 !important; box-shadow: none !important; margin: 0 !important; padding: 40px !important; }
+            .doc-canvas { border: 2px solid #000 !important; box-shadow: none !important; margin: 0 !important; padding: 30px !important; width: 100% !important; }
+            .half-page { 
+                height: 140mm !important; /* Polovina A4 visine u milimetrima */
+                min-height: 140mm !important;
+                max-height: 140mm !important;
+                border-bottom: 2px dashed #000 !important; 
+                page-break-inside: avoid;
+            }
             input, select, textarea { 
                 border: none !important; 
-                border-bottom: 1px solid #000 !important; /* Pretvara polja u linije za pisanje na papiru */
+                border-bottom: 1px solid #000 !important; 
                 background: transparent !important; 
-                appearance: none; 
                 padding: 0 !important; 
-                font-size: 1.1rem; 
+                font-size: 1.05rem; 
+                width: 100%;
             }
             .print-hide { display: none !important; }
         }
@@ -206,7 +228,7 @@
     <div id="sidebar">
         <div class="sidebar-header">
             <img src="profilna.png" alt="Ognjen Tech Logo">
-            <h3 style="margin-top: 8px; font-size: 1.2rem;">Arhivski Centar</h3>
+            <h3 style="margin-top: 8px; font-size: 1.1rem;">Arhivski Centar</h3>
         </div>
         <div class="menu-section">
             <button class="btn btn-blue" style="width:100%; margin-bottom:20px;" onclick="showPane('new-protocol-pane')">📁 Otvori Novi Protokol</button>
@@ -218,8 +240,8 @@
     <!-- MAIN CONTENT -->
     <div id="main-content">
         <header>
-            <h2>Ognjen Tech Assistant</h2>
-            <div style="font-weight: bold; color: var(--text-muted); font-size: 0.9rem;">Sistem Sinhronizovan</div>
+            <h2>Ognjen Tech Assistant v5</h2>
+            <div style="font-weight: bold; color: var(--text-muted); font-size: 0.9rem;">Sve stare datoteke su učitane</div>
         </header>
 
         <!-- PANE: NEW PROTOCOL -->
@@ -236,12 +258,12 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Broj Protokola (npr. 12-06-2026)</label>
+                    <label>Broj Protokola (npr. 10-06-2026)</label>
                     <input type="text" id="proto-id" placeholder="Broj oznake" style="max-width: 300px; padding: 10px;">
                 </div>
                 <div class="form-group">
-                    <label>Naziv predmeta</label>
-                    <input type="text" id="proto-title" placeholder="Upiši naziv" style="padding: 10px; width: 100%;">
+                    <label>Naziv predmeta / Saradnje</label>
+                    <input type="text" id="proto-title" placeholder="Upiši naziv partnera ili predmeta" style="padding: 10px; width: 100%;">
                 </div>
                 <button class="btn btn-blue" onclick="createProtocol()">Zavedi protokol</button>
             </div>
@@ -252,24 +274,24 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
                 <h3 id="manage-proto-title">Protokol</h3>
                 <div style="display:flex; gap:10px;">
-                    <button class="btn btn-green" onclick="printWholeProtocolSheet()">🖨️ Odštampaj Protokolarni List</button>
+                    <button class="btn btn-green" onclick="printWholeProtocolSheet()">🖨️ Odštampaj Ceo Protokolarni List</button>
                     <button class="btn btn-danger" onclick="deleteCurrentProtocol()">Obriši protokol</button>
                 </div>
             </div>
 
             <!-- Dokumenti unutar protokola -->
             <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:6px; margin-bottom:20px;">
-                <h4>Dokumenti i listovi u ovom predmetu:</h4>
+                <h4>Zavedeni dokumenti u ovom protokolu:</h4>
                 <div id="protocol-docs-list" style="margin-top: 10px; margin-bottom: 15px;"></div>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="new-doc-name-input" placeholder="Upiši naziv novog lista..." style="flex: 1; padding:10px;">
+                    <input type="text" id="new-doc-name-input" placeholder="Upiši naziv novog lista (npr. Potvrda, Izveštaj...)" style="flex: 1; padding:10px;">
                     <button class="btn btn-blue" onclick="createNewDocumentInProtocol()">➕ Dodaj novi list</button>
                 </div>
             </div>
 
             <!-- Zona skeniranih slika -->
             <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:6px; margin-bottom:20px;">
-                <label>📸 Skenirani prilozi / Slike:</label>
+                <label>📸 Skenirani prilozi / Slike u fascikli:</label>
                 <input type="file" id="scan-uploader" accept="image/*" onchange="uploadScan(event)" style="margin-top:5px;">
                 <div id="scanned-zone" class="scanned-images-container" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
             </div>
@@ -277,26 +299,32 @@
             <!-- INTERAKTIVNA ZONA UREĐIVANJA -->
             <div id="document-editor-zone" style="display:none; background:#fff; padding:20px; border:1px solid var(--border-color); border-radius:6px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h4 id="active-document-title">Uređivanje</h4>
+                    <h4 id="active-document-title">Uređivanje lista</h4>
                     <div style="display:flex; gap: 10px;">
-                        <button class="btn btn-blue" onclick="saveActiveDocumentLayout()">💾 Sačuvaj uneto</button>
-                        <button class="btn" onclick="window.print()">🖨️ Odštampaj ovaj dokument</button>
+                        <button class="btn btn-blue" onclick="saveActiveDocumentLayout()">💾 Sačuvaj sve izmene</button>
+                        <button class="btn" onclick="window.print()">🖨️ Odštampaj ovaj list</button>
                     </div>
                 </div>
 
-                <!-- BIRAČ ŠABLONA -->
+                <!-- BIRAČ ŠABLONA (10 ŠABLONA) -->
                 <div style="background: #eaeded; padding: 15px; border-radius: 6px; margin-bottom: 20px;" class="print-hide">
-                    <label style="color: #000; font-weight: bold;">📑 Učitaj brzi predefinisani obrazac (Možeš ga menjati i dopisivati):</label>
+                    <label style="color: #000; font-weight: bold;">📑 Izaberi jedan od 10 predefinisanih obrazaca (Slobodno editovanje nakon klika):</label>
                     <select id="template-selector" onchange="applyTemplateToDocument()" style="width: 100%; margin-top: 5px; font-weight: bold; padding:8px;">
-                        <option value="">-- Prazan list (Slobodno kucanje) --</option>
-                        <option value="potvrda_saradnik_pola">1. [POLA STRANE] Blanko Potvrda o saradnji (Kompaktna - 5 redova)</option>
-                        <option value="potvrda_izvrseno">2. Potvrda o uspešno završenom poslu / zadatku</option>
-                        <option value="ugovor">3. Ugovor o tehničkoj saradnji i marketingu</option>
-                        <option value="sednica">4. Poziv za sednicu Upravnog odbora</option>
+                        <option value="">-- Prazan list (Slobodno kucanje teksta) --</option>
+                        <option value="potvrda_saradnik_pola">1. [POLA STRANE] Blanko Potvrda o saradnji (5 redova, linije za popunjavanje)</option>
+                        <option value="potvrda_izvrseno">2. Potvrda o uspešno izvršenom tehničkom zadatku</option>
+                        <option value="ugovor_marketing">3. Ugovor o marketingu i tehničkom sponzorstvu</option>
+                        <option value="poziv_sednica">4. Zvanični poziv za sednicu i sastanak</option>
+                        <option value="izvestaj_rad">5. Periodični izveštaj o radu i metrikama platforme</option>
+                        <option value="zapisnik_sastanak">6. Zapisnik sa sastanka sa spoljnim saradnicima</option>
+                        <option value="tehnicka_analiza">7. Izveštaj o bezbednosnoj i tehničkoj analizi sistema</option>
+                        <option value="faktura_memorandum">8. Predračun / Memorandum za kompenzaciju opreme</option>
+                        <option value="saglasnost_roditelj">9. Izjava o saglasnosti roditelja za ugovore</option>
+                        <option value="potvrda_prijem">10. Potvrda o prijemu i testiranju hardverskih uređaja</option>
                     </select>
                 </div>
 
-                <!-- ZONA ZA ŠTAMPU (Zajednički kontejner) -->
+                <!-- ZONA ZA ŠTAMPU -->
                 <div id="print-zone">
                     <div id="doc-to-print" class="doc-canvas">
                         <!-- Zaglavlje -->
@@ -304,13 +332,13 @@
                             <img src="profilna.png" alt="Ognjen Tech Logo">
                             <div class="doc-header-info">
                                 <h2>Ognjen Filipović</h2>
-                                <p>Cybersecurity enthusiast & Tech Content Creator</p>
+                                <p>Cybersecurity Enthusiast & Tech Content Creator</p>
                                 <p>E-mail: ognjen.tech.contact@gmail.com | Tel: 0601979747</p>
                             </div>
                         </div>
 
-                        <!-- Naslov -->
-                        <div style="text-align:center; margin-bottom:30px; font-weight:bold; font-size:1.3rem; text-transform: uppercase; font-family: 'Courier New', monospace;" id="render-doc-type">
+                        <!-- Naslov lista -->
+                        <div style="text-align:center; margin-bottom:20px; font-weight:bold; font-size:1.2rem; text-transform: uppercase; font-family: 'Courier New', monospace;" id="render-doc-type">
                             DOKUMENT
                         </div>
 
@@ -324,44 +352,88 @@
     </div>
 
     <script>
+        // Osiguravamo učitavanje svih prethodnih verzija baze podataka
         let db = JSON.parse(localStorage.getItem('ognjen_v4_db')) || {};
         let activeProtocolId = null;
         let activeDocumentIndex = null;
         let selectedFolderColor = 'var(--folder-crvena)';
 
+        // Kompletna lista od 10 predefinisanih šablona sa svim poljima
         const templates = {
             potvrda_saradnik_pola: [
                 { type: 'label', label: 'EVIDENCIONI BROJ I DATUM:' },
                 { type: 'input', placeholder: 'Br. ____/2026, U Aranđelovcu, dana ____.____.2026. godine' },
-                { type: 'label', label: 'POTVRDA O STATUSU EKSTERNOG SARADNIKA' },
-                { type: 'textarea', placeholder: 'Ovom ispravom se zvanično potvrđuje da je lice/brend ____________________________________ aktivni i zvanični saradnik na projektima platforme Ognjen.Tech.\nSaradnja je klasifikovana kao: ____________________________________.\nImenovano lice ima pravo zastupanja dogovorenih tehničkih interesa.' },
+                { type: 'label', label: 'BLANKO POTVRDA O SARADNJI' },
+                { type: 'textarea', placeholder: '1. Ovim se potvđuje da je brend/lice: ___________________________\n2. Aktivno uzeo učešće na projektu: ___________________________\n3. Saradnja obuhvata poziciju: ___________________________\n4. Status angažovanja se vodi kao aktivan i trajan.\n5. Obe strane potvrđuju obostrano poštovanje dogovorenih tehničkih tačaka.' },
                 { type: 'stamp' }
             ],
             potvrda_izvrseno: [
-                { type: 'label', label: 'EVIDENCIONI BROJ:' },
-                { type: 'input', placeholder: 'Br. M-____/2026' },
-                { type: 'label', label: 'IZVRŠILAC POSLA:' },
-                { type: 'input', placeholder: 'Ime i prezime / Naziv brenda kooperanta' },
-                { type: 'label', label: 'SPECIFIKACIJA IZVRŠENOG ZADATKA:' },
-                { type: 'textarea', placeholder: 'Potvrđuje se da je imenovani izvršilac uspešno i u celosti obavio sledeći zadatak: _____________________________________________________________________________________' },
-                { type: 'label', label: 'STATUS I ZAKLJUČAK (Izaberi ili upiši):' },
-                { type: 'select', options: ['Zadatak izvršen besprekorno i u roku', 'Ugovorena kompenzacija obavljena u celosti', 'Nema daljih potraživanja među stranama'] },
+                { type: 'label', label: 'EVIDENCIJA:' },
+                { type: 'input', placeholder: 'Broj: PI-____/2026' },
+                { type: 'label', label: 'IZVRŠILAC:' },
+                { type: 'input', placeholder: 'Ime i prezime / Naziv kompanije' },
+                { type: 'label', label: 'OPIS IMPLEMENTACIJE I ZADATKA:' },
+                { type: 'textarea', placeholder: 'Potvrđuje se da je zadatak testiranja, konfiguracije i analize hardverskih komponenti uspešno priveden kraju.' },
                 { type: 'stamp' }
             ],
-            ugovor: [
+            ugovor_marketing: [
                 { type: 'label', label: 'UGOVORNE STRANE:' },
-                { type: 'textarea', placeholder: '1. Ognjen Filipović PR Aranđelovac\n2. Partner/Brend: ____________________________________' },
-                { type: 'label', label: 'PREDMET UGOVORA:' },
-                { type: 'textarea', placeholder: 'Saradnja na polju digitalnog marketinga, promocije tech opreme i bezbednosne analize sistema.' },
-                { type: 'label', label: 'FINANSIJSKI MODEL:' },
-                { type: 'select', options: ['Kompenzacija hardverskih periferija opreme', 'Plaćeno sponzorstvo (Fiksni ugovoreni budžet)', 'Affiliate saradnja / Pro-bono'] },
+                { type: 'textarea', placeholder: 'Prva strana: Ognjen Filipović, Aranđelovac\nDruga strana: ___________________________' },
+                { type: 'label', label: 'PREDMET SPONZORSTVA:' },
+                { type: 'input', placeholder: 'Brendiranje, video recenzije i plasman tech opreme' },
+                { type: 'label', label: 'MODEL REALIZACIJE:' },
+                { type: 'select', options: ['Kompenzacija za hardverske periferije', 'Fiksni budžet po sponzorisanom video zapisu', 'Affiliate procenat od prodaje'] },
                 { type: 'stamp' }
             ],
-            sednica: [
-                { type: 'label', label: 'ORGAN UPRAVLJANJA:' },
-                { type: 'input', placeholder: 'Upravni Odbor Ognjen.Tech' },
-                { type: 'label', label: 'POZIV NA SEDNICU I DNEVNI RED:' },
-                { type: 'textarea', placeholder: 'Saziva se sednica za dana ____.____.2026. sa sledećim dnevnim redom:\n1. Razmatranje novih ugovora i tehničkih projekata\n2. Evaluacija dosadašnjeg rada\n3. Razno' },
+            poziv_sednica: [
+                { type: 'label', label: 'PREDMET:' },
+                { type: 'input', placeholder: 'Poziv za hitan sastanak / Sednicu odbora' },
+                { type: 'label', label: 'DNEVNI RED:' },
+                { type: 'textarea', placeholder: '1. Analiza novih sponzorskih ugovora\n2. Planiranje Face Reveal projekta i opreme\n3. Tekuća pitanja i arhiviranje' },
+                { type: 'stamp' }
+            ],
+            izvestaj_rad: [
+                { type: 'label', label: 'PERIOD IZVEŠTAVANJA:' },
+                { type: 'input', placeholder: 'Za mesec: _________________ 2026. godine' },
+                { type: 'label', label: 'OSTVARENE METRIKE (TIKTOK / GITHUB):' },
+                { type: 'textarea', placeholder: 'Broj novih pratilaca: ______\nUkupan pregled videa: ______\nStatus MedCore HIS sistema na GitHubu: ______' },
+                { type: 'stamp' }
+            ],
+            zapisnik_sastanak: [
+                { type: 'label', label: 'MRASTO I VREME ODRŽAVANJA:' },
+                { type: 'input', placeholder: 'Dana ____.____.2026. u prostorijama studija' },
+                { type: 'label', label: 'PRISUTNI ČLANOVI:' },
+                { type: 'textarea', placeholder: '1. Ognjen Filipović\n2. Spoljni partneri: ___________________________\n3. Asistent/Zapisničar: ___________________________' },
+                { type: 'label', label: 'DONETE ODLUKE:' },
+                { type: 'textarea', placeholder: 'Jednoglasno je usvojena odluka o pokretanju novog ciklusa marketing kampanje.' },
+                { type: 'stamp' }
+            ],
+            tehnicka_analiza: [
+                { type: 'label', label: 'NAZIV SISTEMA POD ANALIZOM:' },
+                { type: 'input', placeholder: 'Npr. MedCore HIS / Lokalne mreže' },
+                { type: 'label', label: 'PRONAĐENE RANJIVOSTI I STATUS:' },
+                { type: 'textarea', placeholder: 'Analizom izvornog koda i mrežnih protokola ustanovljeno je sledeće stanje:\n- Enkripcija podataka: Zadovoljava\n- Pristup bazi podataka: Potrebna revizija' },
+                { type: 'stamp' }
+            ],
+            faktura_memorandum: [
+                { type: 'label', label: 'OBRAČUN BROJ:' },
+                { type: 'input', placeholder: 'MEM-____-2026' },
+                { type: 'label', label: 'VREDNOST ARTIKALA / USLUGE:' },
+                { type: 'textarea', placeholder: '1. Pristup oglasnom prostoru (TikTok video) - Kompenzacija\n2. Podešavanje sistema i optimizacija switch-eva' },
+                { type: 'stamp' }
+            ],
+            saglasnost_roditelj: [
+                { type: 'label', label: 'POTPISNIK IZJAVE (RODITELJ/STARATELJ):' },
+                { type: 'input', placeholder: 'Ime i prezime roditelja: ___________________________' },
+                { type: 'label', label: 'PREDMET SAGLASNOSTI:' },
+                { type: 'textarea', placeholder: 'Dajem punu pravnu i roditeljsku saglasnost da maloletni Ognjen Filipović može potpisati ugovor o tehničkoj saradnji sa navedenim brendom.' },
+                { type: 'stamp' }
+            ],
+            potvrda_prijem: [
+                { type: 'label', label: 'PRIMLJENA OPREMA:' },
+                { type: 'input', placeholder: 'Model tastature / miša / monitora' },
+                { type: 'label', label: 'STANJE PAKETA PRI PRIJEMU:' },
+                { type: 'select', options: ['Potpuno novo, fabrički zapakovano', 'Korišćeno/Testni primerak bez oštećenja', 'Paket otvaran, oprema ispravna'] },
                 { type: 'stamp' }
             ]
         };
@@ -381,7 +453,8 @@
         function createProtocol() {
             let id = document.getElementById('proto-id').value.trim();
             let title = document.getElementById('proto-title').value.trim();
-            if(!id || !title) { alert('Unesi broj protokola i naziv!'); return; }
+            if(!id || !title) { alert('Unesi broj protokola i naziv predmeta!'); return; }
+            
             db[id] = { id: id, color: selectedFolderColor, title: title, scans: [], documents: [] };
             saveToStorage(); renderSidebar(); openProtocol(id);
             document.getElementById('proto-id').value = ''; document.getElementById('proto-title').value = '';
@@ -400,6 +473,11 @@
             activeProtocolId = id; activeDocumentIndex = null;
             document.getElementById('manage-proto-title').innerText = `Protokol: ${db[id].id} — ${db[id].title}`;
             document.getElementById('document-editor-zone').style.display = 'none';
+            
+            // Osiguravamo kompatibilnost sa starim podacima (ako polja ne postoje, kreiramo ih)
+            if(!db[id].documents) db[id].documents = [];
+            if(!db[id].scans) db[id].scans = [];
+
             renderProtocolDocumentsList(); renderScans(db[id].scans); showPane('protocol-manage-pane');
         }
 
@@ -413,8 +491,13 @@
 
         function createNewDocumentInProtocol() {
             let name = document.getElementById('new-doc-name-input').value.trim();
-            if(!name) { alert('Unesi naziv lita!'); return; }
-            db[activeProtocolId].documents.push({ name: name, templateKey: '', elements: [{ type: 'textarea', placeholder: 'Kucaj slobodan tekst ovde...', value: '' }] });
+            if(!name) { alert('Upiši naziv novog lista!'); return; }
+            
+            db[activeProtocolId].documents.push({ 
+                name: name, 
+                templateKey: '', 
+                elements: [{ type: 'textarea', placeholder: 'Kucaj slobodan tekst ovde...', value: '' }] 
+            });
             saveToStorage(); renderProtocolDocumentsList();
             loadDocumentIntoEditor(db[activeProtocolId].documents.length - 1);
             document.getElementById('new-doc-name-input').value = '';
@@ -423,11 +506,10 @@
         function loadDocumentIntoEditor(index) {
             activeDocumentIndex = index;
             let doc = db[activeProtocolId].documents[index];
-            document.getElementById('active-document-title').innerText = `Uređivanje: ${doc.name}`;
+            document.getElementById('active-document-title').innerText = `Uređivanje lista: ${doc.name}`;
             document.getElementById('render-doc-type').innerText = doc.name.toUpperCase();
             document.getElementById('template-selector').value = doc.templateKey || '';
             
-            // Provera formata za pola strane
             let canvas = document.getElementById('doc-to-print');
             if(doc.templateKey === 'potvrda_saradnik_pola') { canvas.classList.add('half-page'); } else { canvas.classList.remove('half-page'); }
 
@@ -440,9 +522,16 @@
             let canvas = document.getElementById('doc-to-print');
             db[activeProtocolId].documents[activeDocumentIndex].templateKey = key;
             
-            if(key === 'potvrda_saradnik_pola') { canvas.classList.add('half-page'); buildFormFromData(templates[key]); } 
-            else if(key === '') { canvas.classList.remove('half-page'); buildFormFromData([{ type: 'textarea', placeholder: 'Kucaj slobodan tekst ovde...', value: '' }]); }
-            else { canvas.classList.remove('half-page'); buildFormFromData(templates[key]); }
+            if(key === 'potvrda_saradnik_pola') { 
+                canvas.classList.add('half-page'); 
+                buildFormFromData(templates[key]); 
+            } else if(key === '') { 
+                canvas.classList.remove('half-page'); 
+                buildFormFromData([{ type: 'textarea', placeholder: 'Kucaj slobodan tekst ovde...', value: '' }]); 
+            } else { 
+                canvas.classList.remove('half-page'); 
+                buildFormFromData(templates[key]); 
+            }
         }
 
         function buildFormFromData(elementsArray) {
@@ -457,7 +546,7 @@
                 } else if(el.type === 'input') {
                     let input = document.createElement('input'); input.type = 'text'; input.placeholder = el.placeholder || ''; input.value = el.value || ''; row.appendChild(input);
                 } else if(el.type === 'textarea') {
-                    let tx = document.createElement('textarea'); tx.rows = 4; tx.placeholder = el.placeholder || ''; tx.value = el.value || ''; row.appendChild(tx);
+                    let tx = document.createElement('textarea'); tx.rows = el.placeholder && el.placeholder.includes('\n') ? 6 : 4; tx.placeholder = el.placeholder || ''; tx.value = el.value || ''; row.appendChild(tx);
                 } else if(el.type === 'select') {
                     let sel = document.createElement('select');
                     el.options.forEach(o => {
@@ -465,7 +554,7 @@
                     });
                     row.appendChild(sel);
                 } else if(el.type === 'stamp') {
-                    row.innerHTML = `<div style="display:flex; justify-content:space-between; margin-top:35px; font-family:'Courier New', monospace;">
+                    row.innerHTML = `<div style="display:flex; justify-content:space-between; margin-top:25px; font-family:'Courier New', monospace;">
                         <div class="stamp-box">M.P.<br><br>OGNJEN TECH<br>ARHIVA</div>
                         <div style="text-align:right; align-self: flex-end;"><p>POTPIS RUKOVODIOCA:</p><br><p>___________________________</p></div>
                     </div>`;
@@ -490,42 +579,40 @@
                 }
                 doc.elements.push(item);
             }
-            saveToStorage(); alert('Izmene uspešno sačuvane u bazu!');
+            saveToStorage(); alert('Sve izmene na ovom listu su bezbedno sačuvane!');
         }
 
-        /* FUNKCIJA ZA ŠTAMPANJE CELOG PROTOKOLARNOG LISTA PREMA ARHIVI */
         function printWholeProtocolSheet() {
             let p = db[activeProtocolId];
             let docsHtml = '';
             if(p.documents.length === 0) { docsHtml = '<li><i>Nema zavedenih listova u ovom predmetu.</i></li>'; }
-            else { p.documents.forEach(d => { docsHtml += `<li style="margin-bottom:8px; font-weight:bold;">📄 ${d.name.toUpperCase()} (Šablon: ${d.templateKey || 'Slobodan unos'})</li>`; }); }
+            else { p.documents.forEach(d => { docsHtml += `<li style="margin-bottom:8px; font-weight:bold;">📄 ${d.name.toUpperCase()}</li>`; }); }
 
             let printZone = document.getElementById('print-zone');
             let stariSadrzaj = printZone.innerHTML;
 
-            // Privremeno prebacujemo sadržaj na protokolarni list za štampu
             printZone.innerHTML = `
-                <div class="doc-canvas" style="font-family:'Courier New', monospace;">
+                <div class="doc-canvas" style="font-family:'Courier New', monospace; min-height: 1050px;">
                     <div style="text-align:center; border-bottom:3px double #000; padding-bottom:15px; margin-bottom:30px;">
-                        <h2>OGNJEN TECH ASSISTANT — GENERALNI ARHIVSKI PROTOKOL</h2>
-                        <p>Sistem za upravljanje i zavođenje eksternih dokumenata i predmeta</p>
+                        <h2>OGNJEN TECH ASSISTANT — PROTOKOLARNI LIST</h2>
+                        <p>Zvanična arhivska struktura zavedenog predmeta</p>
                     </div>
                     <table style="width:100%; border-collapse:collapse; margin-bottom:30px; font-size:1.1rem;">
-                        <tr><td style="padding:8px; border:1px solid #000; width:30%; font-weight:bold;">BROJ PROTOKOLA:</td><td style="padding:8px; border:1px solid #000; font-weight:bold; font-size:1.2rem;">${p.id}</td></tr>
-                        <tr><td style="padding:8px; border:1px solid #000; font-weight:bold;">NAZIV PREDMETA:</td><td style="padding:8px; border:1px solid #000;">${p.title.toUpperCase()}</td></tr>
-                        <tr><td style="padding:8px; border:1px solid #000; font-weight:bold;">STATUS FASCICLE:</td><td style="padding:8px; border:1px solid #000;">Zavedeno i Arhivirano trajno</td></tr>
-                        <tr><td style="padding:8px; border:1px solid #000; font-weight:bold;">UKUPNO LISTOVA:</td><td style="padding:8px; border:1px solid #000;">${p.documents.length}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #000; width:30%; font-weight:bold;">BROJ PROTOKOLA:</td><td style="padding:10px; border:1px solid #000; font-weight:bold; font-size:1.2rem;">${p.id}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #000; font-weight:bold;">NAZIV PREDMETA:</td><td style="padding:10px; border:1px solid #000;">${p.title.toUpperCase()}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #000; font-weight:bold;">STATUS:</td><td style="padding:10px; border:1px solid #000;">Trajno Arhivirano</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #000; font-weight:bold;">UKUPNO ZAVEDENIH LISTOVA:</td><td style="padding:10px; border:1px solid #000;">${p.documents.length}</td></tr>
                     </table>
-                    <h3>STRUKTURA I SPISAK ZAVEDENIH LISTOVA UNUTAR PREDMETA:</h3>
+                    <h3>SPISAK SVIH DOKUMENATA UNUTAR PROTOKOLA:</h3>
                     <ol style="margin-left:25px; margin-top:15px; font-size:1.1rem;">${docsHtml}</ol>
-                    <div style="display:flex; justify-content:space-between; margin-top:100px;">
-                        <div style="border:2px solid #000; width:150px; height:150px; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold; font-size:0.8rem;">M.P.<br><br>ARHIVSKI PEČAT</div>
+                    <div style="display:flex; justify-content:space-between; margin-top:120px;">
+                        <div class="stamp-box">M.P.<br><br>ARHIVSKI PEČAT</div>
                         <div style="text-align:right; align-self: flex-end;"><p>POTPIS ARHIVATORA:</p><br><br><p>___________________________</p></div>
                     </div>
                 </div>`;
             
             window.print();
-            printZone.innerHTML = stariSadrzaj; // Vraćamo nazad editor
+            printZone.innerHTML = stariSadrzaj;
             loadDocumentIntoEditor(activeDocumentIndex !== null ? activeDocumentIndex : 0);
         }
 
@@ -549,7 +636,7 @@
         }
 
         function deleteCurrentProtocol() {
-            if(confirm('Obrisati ceo protokol i sve fajlove?')) { delete db[activeProtocolId]; saveToStorage(); renderSidebar(); showPane('new-protocol-pane'); }
+            if(confirm('Da li ste sigurni da želite da obrišete ovaj protokol?')) { delete db[activeProtocolId]; saveToStorage(); renderSidebar(); showPane('new-protocol-pane'); }
         }
 
         function saveToStorage() { localStorage.setItem('ognjen_v4_db', JSON.stringify(db)); }
