@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ognjen Tech Assistant - Professional HQ</title>
+    <title>Ognjen Tech Assistant - Interaktivni Obrasci</title>
     <style>
         /* Profesionalna Svetla Tema */
         :root {
@@ -14,7 +14,6 @@
             --text-muted: #546e7a;
             --accent-blue: #0d47a1;
             
-            /* Boje fascikli */
             --folder-crvena: #d32f2f;
             --folder-zuta: #fbc02d;
             --folder-zelena: #388e3c;
@@ -126,14 +125,33 @@
         /* Form Controls */
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
         label { font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; color: #333; }
-        input, select, textarea {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 0.95rem;
-            background: #fff;
-            color: #000;
+        
+        /* Interaktivna polja unutar samog dokumenta */
+        .interactive-row {
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
         }
+        .interactive-row label {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            color: #000;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        .interactive-row input, .interactive-row textarea, .interactive-row select {
+            width: 100%;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.05rem;
+            border: 2px dashed #555;
+            background: #fafafa;
+            color: #000;
+            border-radius: 4px;
+        }
+        .interactive-row textarea { resize: vertical; }
+
         .btn {
             padding: 10px 18px;
             border: 1px solid var(--border-color);
@@ -151,7 +169,7 @@
             color: #000;
             padding: 50px;
             border: 2px solid #000;
-            font-family: 'Courier New', Courier, monospace;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             margin-top: 25px;
             min-height: 850px;
         }
@@ -160,7 +178,7 @@
             align-items: center;
             border-bottom: 3px double #000;
             padding-bottom: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 35px;
         }
         .doc-system-header img {
             width: 85px;
@@ -171,34 +189,17 @@
         .doc-header-info h2 { font-size: 1.5rem; font-weight: bold; }
         .doc-header-info p { font-size: 0.9rem; margin-top: 3px; }
 
-        /* Form template layout mechanics */
-        .template-row {
-            margin-bottom: 20px;
-        }
-        .template-row label {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            color: #000;
-        }
-        .template-row input, .template-row textarea, .template-row select {
-            width: 100%;
-            font-family: 'Courier New', Courier, monospace;
-            border: 1px dashed #777;
-            background: transparent;
-            margin-top: 5px;
-        }
-
         .stamp-box {
             border: 2px solid #000;
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
             text-align: center;
             font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         .scanned-images-container img {
@@ -208,12 +209,20 @@
             border-radius: 4px;
         }
 
-        /* Print Override */
+        /* Print Override - Kada se štampa, sklanjaju se ivice i pozadine i ostaje čist tekst */
         @media print {
             body * { visibility: hidden; }
             #doc-to-print, #doc-to-print * { visibility: visible; }
-            #doc-to-print { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; }
-            input, select, textarea { border: none !important; background: transparent !important; appearance: none; -webkit-appearance: none; padding: 0; font-size: 1rem; color: #000; }
+            #doc-to-print { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; box-shadow: none; }
+            input, select, textarea { 
+                border: none !important; 
+                background: transparent !important; 
+                appearance: none; 
+                -webkit-appearance: none; 
+                padding: 0 !important; 
+                font-size: 1.1rem; 
+                color: #000;
+            }
             .print-hide { display: none !important; }
         }
     </style>
@@ -237,7 +246,7 @@
     <div id="main-content">
         <header>
             <h2>Ognjen Tech Assistant</h2>
-            <div style="font-weight: bold; color: var(--text-muted); font-size: 0.9rem;">Sistem Spreman</div>
+            <div style="font-weight: bold; color: var(--text-muted); font-size: 0.9rem;">Sistem Aktivan</div>
         </header>
 
         <!-- PANE: NEW PROTOCOL -->
@@ -282,7 +291,7 @@
                 <div id="protocol-docs-list" style="margin-top: 10px; margin-bottom: 15px;"></div>
                 
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="new-doc-name-input" placeholder="Upiši naziv novog lista/dokumenta" style="flex: 1;">
+                    <input type="text" id="new-doc-name-input" placeholder="Upiši naziv novog lista (npr. Potvrda)" style="flex: 1;">
                     <button class="btn btn-blue" onclick="createNewDocumentInProtocol()">➕ Dodaj novi prazan list</button>
                 </div>
             </div>
@@ -294,20 +303,23 @@
                 <div id="scanned-zone" class="scanned-images-container" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
             </div>
 
-            <!-- LIVE EDITOR (SA PREDEFINISANIM OBRAZCIMA) -->
+            <!-- LIVE EDITOR (PRAVI INTERAKTIVNI OBRAZAC) -->
             <div id="document-editor-zone" style="display:none; background:#fff; padding:20px; border:1px solid var(--border-color); border-radius:6px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h4 id="active-document-title">Uređivanje dokumenta</h4>
-                    <button class="btn" onclick="window.print()">🖨️ Odštampaj ovaj list</button>
+                    <div style="display:flex; gap: 10px;">
+                        <button class="btn btn-blue" onclick="saveActiveDocumentLayout()">💾 Sačuvaj uneto</button>
+                        <button class="btn" onclick="window.print()">🖨️ Odštampaj ovaj list</button>
+                    </div>
                 </div>
 
-                <!-- BIRAČ PREDEFINISANIH OBRAZACA -->
+                <!-- BIRAČ OBRAZACA -->
                 <div style="background: #eaeded; padding: 15px; border-radius: 6px; margin-bottom: 20px;" class="print-hide">
-                    <label style="color: #000; font-weight: bold;">📑 Učitaj predefinisani blanko obrazac:</label>
+                    <label style="color: #000; font-weight: bold;">📑 Učitaj predefinisani blanko obrazac sa poljima i menijima:</label>
                     <select id="template-selector" onchange="applyTemplateToDocument()" style="width: 100%; margin-top: 5px; font-weight: bold; border: 1px solid #777;">
-                        <option value="">-- Izaberi obrazac --</option>
-                        <option value="potvrda_saradnik">1. Blanko Potvrda o statusu spoljnog saradnika / Partnera</option>
-                        <option value="potvrda_izvrseno">2. Potvrda o uspešno izvršenim ugovornim obavezama (Završen posao)</option>
+                        <option value="">-- Izaberi obrazac za popunjavanje --</option>
+                        <option value="potvrda_saradnik">1. Blanko Potvrda o statusu zvaničnog saradinika / Partnera</option>
+                        <option value="potvrda_izvrseno">2. Potvrda o uspešno izvršenim ugovornim obavezama (Urađen posao)</option>
                         <option value="sednica">3. Poziv za sednicu Upravnog odbora i Dnevni red</option>
                         <option value="ugovor">4. Profesionalni Ugovor o tehničkoj saradnji / Marketing</option>
                         <option value="zapisnik">5. Zvanični Zapisnik sa sastanka / Protokol rada</option>
@@ -315,9 +327,9 @@
                     </select>
                 </div>
 
-                <!-- KANVAS ZA ŠTAMPU -->
+                <!-- KANVAS ZA ŠTAMPU - POLJA SE GENERIŠU DIREKTNO OVDE KAO FORM CONTROLE -->
                 <div id="doc-to-print" class="doc-canvas">
-                    <!-- Fiksno obavezno Zaglavlje -->
+                    <!-- Fiksno memorandum zaglavlje -->
                     <div class="doc-system-header">
                         <img src="profilna.png" alt="Ognjen Tech Logo">
                         <div class="doc-header-info">
@@ -328,15 +340,13 @@
                     </div>
 
                     <!-- Dinamični Naslov Dokumenta -->
-                    <div style="text-align:center; margin-bottom:35px; font-weight:bold; font-size:1.3rem; text-transform: uppercase;" id="render-doc-type">
+                    <div style="text-align:center; margin-bottom:35px; font-weight:bold; font-size:1.4rem; text-transform: uppercase; font-family: 'Courier New', Courier, monospace;" id="render-doc-type">
                         DOKUMENT
                     </div>
 
-                    <!-- Zona gde se učitavaju polja i padajući meniji izabranog obrasca -->
+                    <!-- ŽIVA, INTERAKTIVNA POLJA KOJA SE POPUNJAVAJU I MENJAJU -->
                     <div id="dynamic-elements-area"></div>
                 </div>
-
-                <button class="btn btn-blue" style="margin-top:20px; width: 100%;" onclick="saveActiveDocumentLayout()">💾 Sačuvaj unete podatke u ovom listu</button>
             </div>
         </div>
     </div>
@@ -347,78 +357,78 @@
         let activeDocumentIndex = null;
         let selectedFolderColor = 'var(--folder-crvena)';
 
-        // PROŠIRENA BAZA OBRAZACA (Dodate tražene potvrde)
+        // DEFINICIJA STRUKTURE POLJA I PADRAJUĆIH MENIJA ZA SVAKI OBRAZAC
         const templates = {
             potvrda_saradnik: [
-                { type: 'label', label: 'PREDMET DOKUMENTA:' },
-                { type: 'input', placeholder: 'POTVRDA O STATUSU ZVANIČNOG SARADNIKA' },
-                { type: 'label', label: 'PODACI O SARADNIKU / PARTNERU (Ime, prezime, naziv firme/brenda):' },
-                { type: 'input', placeholder: 'Unesite podatke lica ili kompanije kojoj se izdaje potvrda' },
-                { type: 'label', label: 'STATUS SARADNJE (Padajući meni):' },
-                { type: 'select', options: ['Aktivan eksterni saradnik', 'Strateški B2B partner', 'Tehnički konsultant', 'Zvanični moderator kanala'] },
-                { type: 'label', label: 'TEKST POTVRDE / PRAVNI OSNOV:' },
-                { type: 'textarea', placeholder: 'Ovom ispravom se zvanično potvrđuje da je gorenavedeno lice aktivni partner na projektima u okviru Ognjen.Tech platforme, sa punim pravom zastupanja dogovorenih tehničkih interesa u javnosti.' },
-                { type: 'label', label: 'ROK VAŽENJA POTVRDE:' },
-                { type: 'select', options: ['Do opoziva / Trajno', 'Ograničeno na trajanje aktuelnog projekta', 'Do kraja tekuće kalendarske godine'] },
+                { type: 'label', label: '1. Broj i datum izdavanja potvrde:' },
+                { type: 'input', placeholder: 'Upiši broj i datum (npr. Br. 05/2026, Dana 28.06.2026.)' },
+                { type: 'label', label: '2. Podaci o saradniku / partnerskom brendu:' },
+                { type: 'input', placeholder: 'Unesi ime, prezime ili naziv kompanije partnera' },
+                { type: 'label', label: '3. Zvanični status saradnje (Izaberi iz menija):' },
+                { type: 'select', options: ['Aktivan eksterni saradnik', 'Strateški B2B partner', 'Tehnički konsultant / Developer', 'Zvanični kooperant platforme'] },
+                { type: 'label', label: '4. Pravni osnov i detaljan tekst potvrde:' },
+                { type: 'textarea', placeholder: 'Ovom ispravom se zvanično potvrđuje da je gorenavedeno lice/brend provereni i autorizovani saradnik na projektima razvoja sistema i tech marketinga, sa punim pravom koordinacije dogovorenih aktivnosti.' },
+                { type: 'label', label: '5. Rok važenja ovog dokumenta:' },
+                { type: 'select', options: ['Do opoziva / Trajno važenje', 'Ograničeno na trajanje aktuelnog projekta', 'Do kraja tekuće kalendarske godine'] },
                 { type: 'stamp' }
             ],
             potvrda_izvrseno: [
-                { type: 'label', label: 'PREDMET DOKUMENTA:' },
-                { type: 'input', placeholder: 'POTVRDA O USPEŠNO IZVRŠENOM POSLU I ZADACIMA' },
-                { type: 'label', label: 'IZVRŠILAC POSLA / KOOPERANT:' },
-                { type: 'input', placeholder: 'Ime i prezime / Naziv agencije ili brenda' },
-                { type: 'label', label: 'OPIS IZVRŠENOG PROJEKTA / ZADATKA:' },
-                { type: 'textarea', placeholder: 'Navedite tačan posao koji je urađen (npr. Isporučene komponente, montiran video materijal, urađena revizija koda, postavljen HIS sistem na GitHub...)' },
-                { type: 'label', label: 'OCENA KVALITETA I REALIZACIJE (Padajući meni):' },
-                { type: 'select', options: ['Zadatak izvršen besprekorno i u roku', 'Zadatak izvršen uspešno uz sitne dopune', 'Projekat realizovan u potpunosti'] },
-                { type: 'label', label: 'FINANSIJSKO-UGOVORNI STATUS:' },
-                { type: 'select', options: ['Sve ugovorne obaveze i isplate su u potpunosti namirene', 'Kompenzacija uspešno obavljena', 'Nema daljih potraživanja među ugovornim stranama'] },
+                { type: 'label', label: '1. Broj dokumenta i overa rada:' },
+                { type: 'input', placeholder: 'Upiši evidencioni broj potvrde' },
+                { type: 'label', label: '2. Izvršilac posla / Kooperant:' },
+                { type: 'input', placeholder: 'Ime i prezime / Naziv agencije ili brenda koji je odradio posao' },
+                { type: 'label', label: '3. Specifikacija uspešno završenog zadatka:' },
+                { type: 'textarea', placeholder: 'Upiši tačan opis posla koji je uspešno završen i predat (npr. Isporučena računarska periferija u ispravnom stanju, završen video projekat, postavljen HIS sistem na GitHub...)' },
+                { type: 'label', label: '4. Ocena i status realizacije rada (Meni):' },
+                { type: 'select', options: ['Zadatak izvršen besprekorno, u roku i u punom obimu', 'Zadatak izvršen uspešno uz uspešnu proveru', 'Projekat realizovan i odobren od strane rukovodioca'] },
+                { type: 'label', label: '5. Finansijsko-pravni status obaveza:' },
+                { type: 'select', options: ['Sve ugovorne obaveze i isplate su u potpunosti namirene', 'Ugovorena kompenzacija uspešno realizovana', 'Nema daljih potraživanja među stranama'] },
                 { type: 'stamp' }
             ],
             sednica: [
-                { type: 'label', label: 'Institucija / Organizacija organa:' },
+                { type: 'label', label: '1. Naziv organa upravljanja:' },
                 { type: 'input', placeholder: 'npr. Upravni Odbor Ognjen.Tech' },
-                { type: 'label', label: 'Mesto i datum održavanja sednice:' },
-                { type: 'input', placeholder: 'Mesto, dana DD.MM.GGGG. godine u XX:XX časova' },
-                { type: 'label', label: 'Tip sednice (Padajući meni):' },
+                { type: 'label', label: '2. Mesto, datum i vreme održavanja:' },
+                { type: 'input', placeholder: 'Upiši lokaciju i satnicu zasedanja' },
+                { type: 'label', label: '3. Tip sednice (Izaberi iz menija):' },
                 { type: 'select', options: ['Redovna sednica', 'Vanredna sednica', 'Hitna elektronska sednica'] },
-                { type: 'label', label: 'Kompletan predloženi dnevni red (Unesi tačke):' },
-                { type: 'textarea', placeholder: '1. Razmatranje novih projekata...\n2. Finansijski izveštaj...\n3. Razno...' },
-                { type: 'label', label: 'Status kvoruma za odlučivanje:' },
-                { type: 'select', options: ['Kvorum je prisutan (Sednica je punovažna)', 'Nema kvoruma (Odlaže se)'] },
+                { type: 'label', label: '4. Predložene tačke dnevnog reda:' },
+                { type: 'textarea', placeholder: 'Tačka 1: Razmatranje ugovora o saradnji\nTačka 2: Analiza tehničkih sistema i platformi\nTačka 3: Tekuća pitanja i razno' },
+                { type: 'label', label: '5. Status kvoruma:' },
+                { type: 'select', options: ['Kvorum je prisutan (Sednica može donositi pravno važeće odluke)', 'Nema kvoruma (Sednica se odlaže)'] },
                 { type: 'stamp' }
             ],
             ugovor: [
-                { type: 'label', label: 'Ugovorne strane (Podaci o partneru):' },
-                { type: 'textarea', placeholder: 'Unesi pun naziv brenda, sedište, PIB i ovlašćeno lice...' },
-                { type: 'label', label: 'Predmet saradnje / Obaveze izvršioca:' },
-                { type: 'textarea', placeholder: 'Izrada tech video sadržaja, plasiranje na TikTok platformu, bezbednosna analiza sistema...' },
-                { type: 'label', label: 'Finansijska stavka / Budžet (Padajući meni):' },
-                { type: 'select', options: ['Plaćeno sponzorstvo (Fiksni budžet)', 'Kompenzacija hardvera/periferija', 'Pro-bono / Affiliate model'] },
-                { type: 'label', label: 'Rok izvršenja i trajanje ugovora:' },
-                { type: 'input', placeholder: 'Ugovor stupa na snagu odmah i traje do završetka projekta.' },
-                { type: 'label', label: 'Nadležnost u slučaju spora:' },
-                { type: 'select', options: ['Sporazumno rešavanje', 'Nadležni sud u Aranđelovcu', 'Privredni sud u Beogradu'] },
+                { type: 'label', label: '1. Ugovorne strane (Podaci o partneru):' },
+                { type: 'textarea', placeholder: 'Unesi pun naziv kompanije, PIB, sedište i ovlašćeno lice sa kojim sklapaš dogovor...' },
+                { type: 'label', label: '2. Predmet ugovora i preuzete obaveze:' },
+                { type: 'textarea', placeholder: 'Definiši šta ugovorne strane preuzimaju na sebe (izrada sadržaja, testiranje, marketing...)' },
+                { type: 'label', label: '3. Finansijski model i budžet (Meni):' },
+                { type: 'select', options: ['Plaćeno sponzorstvo (Fiksni ugovoreni budžet)', 'Kompenzacija opreme / hardverskih periferija', 'Pro-bono / Affiliate model saradnje'] },
+                { type: 'label', label: '4. Vremenski rok i važenje ugovora:' },
+                { type: 'input', placeholder: 'Ugovor stupa na snagu danom potpisa i važi do...' },
+                { type: 'label', label: '5. Nadležnost suda u slučaju nesuglasica:' },
+                { type: 'select', options: ['Sporazumno rešavanje vansudskim putem', 'Nadležni sud u Aranđelovcu', 'Privredni sud u Beogradu'] },
                 { type: 'stamp' }
             ],
             zapisnik: [
-                { type: 'label', label: 'Zapisnik sa poslovnog sastanka povodom predmeta:' },
-                { type: 'input', placeholder: 'Upiši temu sastanka' },
-                { type: 'label', label: 'Prisutna lica i koordinatori:' },
-                { type: 'textarea', placeholder: 'Navedite imena svih prisutnih na sastanku...' },
-                { type: 'label', label: 'Tok sastanka i iznete diskusije:' },
-                { type: 'textarea', placeholder: 'Detaljan opis toka razgovora, primedbi i predloga...' },
-                { type: 'label', label: 'Zaključak sastanka:' },
-                { type: 'select', options: ['Sve tačke uspešno usvojene', 'Potrebno doraditi plan', 'Pregovori obustavljeni'] },
+                { type: 'label', label: '1. Zapisnik sa sastanka na temu:' },
+                { type: 'input', placeholder: 'Upiši glavni povod sastanka' },
+                { type: 'label', label: '2. Prisutna lica i koordinatori:' },
+                { type: 'textarea', placeholder: 'Navedi imena svih učesnika diskusije...' },
+                { type: 'label', label: '3. Tok sastanka, iznete primedbe i predlozi:' },
+                { type: 'textarea', placeholder: 'Upiši detaljno šta je ko izneo tokom zasedanja...' },
+                { type: 'label', label: '4. Konačan usvojeni zaključak (Meni):' },
+                { type: 'select', options: ['Sve tačke i predlozi uspešno usvojeni jednoglasno', 'Potrebno doraditi plan i zakazati nov sastanak', 'Pregovori privremeno obustavljeni'] },
                 { type: 'stamp' }
             ],
             odluka: [
-                { type: 'label', label: 'Pravni osnov / Odluka o:' },
-                { type: 'input', placeholder: 'npr. Odobrenju budžeta za nabavku opreme' },
-                { type: 'label', label: 'Tekst obrazloženja odluke:' },
-                { type: 'textarea', placeholder: 'Imajući u vidu potrebe za razvojem sistema i novih digitalnih kanala, donosi se odluka...' },
-                { type: 'label', label: 'Stepen hitnosti izvršenja:' },
-                { type: 'select', options: ['Hitno (Rok 24h)', 'Redovna procedura', 'Strateški plan dugog roka'] },
+                { type: 'label', label: '1. Odluka / Rešenje o:' },
+                { type: 'input', placeholder: 'npr. Odobrenju novog projekta i marketinškog plana' },
+                { type: 'label', label: '2. Detaljno tekstualno obrazloženje odluke:' },
+                { type: 'textarea', placeholder: 'Upiši razloge donošenja ove odluke na osnovu analiza...' },
+                { type: 'label', label: '3. Stepen hitnosti i nalog za izvršenje (Meni):' },
+                { type: 'select', options: ['Hitno izvršenje (U roku od 24 časa)', 'Redovna procedura realizacije', 'Strateški plan dugoročnog karaktera'] },
                 { type: 'stamp' }
             ]
         };
@@ -498,13 +508,14 @@
             buildFormFromData(templates[key]);
         }
 
+        // GENERATOR ŽIVIH HTML ELEMENATA NA EKRANU
         function buildFormFromData(elementsArray) {
             let area = document.getElementById('dynamic-elements-area'); area.innerHTML = '';
             if(!elementsArray || elementsArray.length === 0) return;
 
             elementsArray.forEach(el => {
                 let row = document.createElement('div');
-                row.className = 'template-row';
+                row.className = 'interactive-row';
                 row.setAttribute('data-type', el.type);
 
                 if(el.type === 'label') {
@@ -512,12 +523,14 @@
                     row.appendChild(l);
                 } 
                 else if(el.type === 'input') {
-                    let input = document.createElement('input'); input.placeholder = el.placeholder || '';
-                    input.value = el.value || ''; row.appendChild(input);
+                    let input = document.createElement('input'); input.type = 'text';
+                    input.placeholder = el.placeholder || ''; input.value = el.value || ''; 
+                    row.appendChild(input);
                 } 
                 else if(el.type === 'textarea') {
-                    let tx = document.createElement('textarea'); tx.rows = 4; tx.placeholder = el.placeholder || '';
-                    tx.value = el.value || ''; row.appendChild(tx);
+                    let tx = document.createElement('textarea'); tx.rows = 4;
+                    tx.placeholder = el.placeholder || ''; tx.value = el.value || ''; 
+                    row.appendChild(tx);
                 } 
                 else if(el.type === 'select') {
                     let sel = document.createElement('select');
@@ -528,15 +541,16 @@
                     row.appendChild(sel);
                 } 
                 else if(el.type === 'stamp') {
-                    row.innerHTML = `<div style="display:flex; justify-content:space-between; margin-top:40px;">
-                        <div class="stamp-box">M.P. SYSTEM BOX<br>KVADRAT PEČATA</div>
-                        <div style="text-align:right; align-self: flex-end;"><p>POTPIS ODGOVORNOG LICA:</p><br><p>___________________________</p></div>
+                    row.innerHTML = `<div style="display:flex; justify-content:space-between; margin-top:50px; font-family:'Courier New', monospace;">
+                        <div class="stamp-box">M.P.<br><br>OGNJEN TECH<br>SYSTEM OVERA</div>
+                        <div style="text-align:right; align-self: flex-end;"><p>POTPIS ODGOVORNOG LICA:</p><br><br><p>___________________________</p></div>
                     </div>`;
                 }
                 area.appendChild(row);
             });
         }
 
+        // ČUVANJE SVEGA ŠTO SI UPISAO I IZABRAO IZ MENIJA
         function saveActiveDocumentLayout() {
             let doc = db[activeProtocolId].documents[activeDocumentIndex];
             doc.elements = [];
@@ -546,16 +560,25 @@
                 let type = r.getAttribute('data-type');
                 let item = { type: type };
 
-                if(type === 'label') { item.label = r.querySelector('label').innerText; }
-                else if(type === 'input') { item.value = r.querySelector('input').value; item.placeholder = r.querySelector('input').placeholder; }
-                else if(type === 'textarea') { item.value = r.querySelector('textarea').value; item.placeholder = r.querySelector('textarea').placeholder; }
+                if(type === 'label') { 
+                    item.label = r.querySelector('label').innerText; 
+                }
+                else if(type === 'input') { 
+                    let inp = r.querySelector('input');
+                    item.value = inp.value; item.placeholder = inp.placeholder; 
+                }
+                else if(type === 'textarea') { 
+                    let txt = r.querySelector('textarea');
+                    item.value = txt.value; item.placeholder = txt.placeholder; 
+                }
                 else if(type === 'select') {
-                    item.value = r.querySelector('select').value; item.options = [];
-                    r.querySelectorAll('select option').forEach(o => item.options.push(o.value));
+                    let sel = r.querySelector('select');
+                    item.value = sel.value; item.options = [];
+                    sel.querySelectorAll('option').forEach(o => item.options.push(o.value));
                 }
                 doc.elements.push(item);
             }
-            saveToStorage(); alert('Podaci unutar obrasca su trajno sačuvani!');
+            saveToStorage(); alert('Svi unosi i selekcije iz menija su uspešno sačuvani u bazu predmeta!');
         }
 
         function uploadScan(event) {
