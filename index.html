@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ognjen Tech Assistant - Professional</title>
+    <title>Ognjen Tech Assistant - Professional HQ</title>
     <style>
         /* Profesionalna Svetla Tema */
         :root {
-            --bg-main: #f8f9fa;
+            --bg-main: #f4f6f9;
             --bg-sidebar: #ffffff;
-            --border-color: #cccccc;
-            --text-main: #212529;
-            --text-muted: #6c757d;
-            --accent-blue: #0056b3;
+            --border-color: #b0bec5;
+            --text-main: #1a1a1a;
+            --text-muted: #546e7a;
+            --accent-blue: #0d47a1;
             
             /* Boje fascikli */
-            --folder-crvena: #dc3545;
-            --folder-zuta: #ffc107;
-            --folder-zelena: #28a745;
-            --folder-plava: #007bff;
+            --folder-crvena: #d32f2f;
+            --folder-zuta: #fbc02d;
+            --folder-zelena: #388e3c;
+            --folder-plava: #1976d2;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,7 +33,7 @@
 
         /* Sidebar */
         #sidebar {
-            width: 300px;
+            width: 320px;
             background-color: var(--bg-sidebar);
             border-right: 2px solid var(--border-color);
             display: flex;
@@ -44,56 +44,90 @@
             padding: 20px;
             border-bottom: 2px solid var(--border-color);
             text-align: center;
-            background: #f1f3f5;
+            background: #eceff1;
         }
         .sidebar-header img {
-            width: 70px;
-            height: 70px;
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid var(--border-color);
         }
         .menu-section { padding: 15px; flex: 1; overflow-y: auto; }
-        .section-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: bold; margin-bottom: 10px; }
+        .section-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: bold; margin-bottom: 10px; letter-spacing: 0.5px; }
         
         .protocol-item {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid var(--border-color);
             background: #fff;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             margin-bottom: 8px;
             font-weight: bold;
         }
-        .protocol-item:hover { background: #f1f3f5; }
-        .folder-dot {
-            width: 15px;
-            height: 15px;
-            border-radius: 3px;
-            margin-right: 10px;
-            border: 1px solid rgba(0,0,0,0.2);
+        .protocol-item:hover { background: #eceff1; }
+        .folder-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 12px;
+            border: 1px solid rgba(0,0,0,0.3);
         }
 
         /* Main Content */
         #main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         header {
-            height: 60px;
+            height: 65px;
             background: #fff;
             border-bottom: 2px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 25px;
         }
         .view-pane { flex: 1; padding: 25px; overflow-y: auto; display: none; }
-        .active-pane { display: block; }
+        .view-pane.active-pane { display: block; }
+
+        /* Color Picker Squares */
+        .color-picker-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        .color-square {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .color-square.selected {
+            border-color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Sub-documents */
+        .doc-link-item {
+            padding: 10px 12px;
+            background: #f1f3f4;
+            border-left: 4px solid var(--accent-blue);
+            margin-bottom: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 0 4px 4px 0;
+        }
+        .doc-link-item:hover { background: #e8eaed; }
 
         /* Form Controls */
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
-        label { font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
+        label { font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; color: #333; }
         input, select, textarea {
-            padding: 8px;
+            padding: 10px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 0.95rem;
@@ -101,7 +135,7 @@
             color: #000;
         }
         .btn {
-            padding: 10px 15px;
+            padding: 10px 18px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             cursor: pointer;
@@ -109,17 +143,17 @@
             background: #fff;
         }
         .btn-blue { background: var(--accent-blue); color: #fff; border: none; }
-        .btn-danger { background: #dc3545; color: #fff; border: none; }
+        .btn-danger { background: #d32f2f; color: #fff; border: none; }
 
-        /* Document Blueprint Editor / Render */
+        /* Document Canvas Render */
         .doc-canvas {
             background: #fff;
             color: #000;
-            padding: 40px;
+            padding: 50px;
             border: 2px solid #000;
             font-family: 'Courier New', Courier, monospace;
-            margin-top: 20px;
-            min-height: 600px;
+            margin-top: 25px;
+            min-height: 850px;
         }
         .doc-system-header {
             display: flex;
@@ -129,25 +163,36 @@
             margin-bottom: 25px;
         }
         .doc-system-header img {
-            width: 80px;
-            height: 80px;
+            width: 85px;
+            height: 85px;
             margin-right: 20px;
             border: 1px solid #000;
         }
-        .doc-header-info h2 { font-size: 1.4rem; font-weight: bold; }
-        .doc-header-info p { font-size: 0.9rem; margin-top: 2px; }
+        .doc-header-info h2 { font-size: 1.5rem; font-weight: bold; }
+        .doc-header-info p { font-size: 0.9rem; margin-top: 3px; }
 
-        .dynamic-element {
-            margin-bottom: 15px;
-            padding: 5px;
-            border: 1px dashed transparent;
+        /* Form template layout mechanics */
+        .template-row {
+            margin-bottom: 20px;
         }
-        .dynamic-element:hover { border-color: #999; }
-        
+        .template-row label {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            color: #000;
+        }
+        .template-row input, .template-row textarea, .template-row select {
+            width: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            border: 1px dashed #777;
+            background: transparent;
+            margin-top: 5px;
+        }
+
         .stamp-box {
             border: 2px solid #000;
-            width: 140px;
-            height: 140px;
+            width: 150px;
+            height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -157,19 +202,10 @@
         }
 
         .scanned-images-container img {
-            max-width: 100%;
+            max-width: 150px;
             margin-top: 10px;
             border: 1px solid var(--border-color);
-        }
-
-        .controls-row {
-            display: flex;
-            gap: 10px;
-            background: #e9ecef;
-            padding: 10px;
             border-radius: 4px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
         }
 
         /* Print Override */
@@ -177,7 +213,8 @@
             body * { visibility: hidden; }
             #doc-to-print, #doc-to-print * { visibility: visible; }
             #doc-to-print { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; }
-            input, select, textarea { border: none; background: transparent; appearance: none; -webkit-appearance: none; padding: 0; font-family: 'Courier New', Courier, monospace; font-size: 1rem; }
+            input, select, textarea { border: none !important; background: transparent !important; appearance: none; -webkit-appearance: none; padding: 0; font-size: 1rem; color: #000; }
+            .print-hide { display: none !important; }
         }
     </style>
 </head>
@@ -187,11 +224,11 @@
     <div id="sidebar">
         <div class="sidebar-header">
             <img src="profilna.png" alt="Ognjen Tech Logo">
-            <h3 style="margin-top: 5px; font-size: 1.1rem;">Centralna Arhiva</h3>
+            <h3 style="margin-top: 8px; font-size: 1.2rem;">Arhivski Centar</h3>
         </div>
         <div class="menu-section">
-            <button class="btn btn-blue" style="width:100%; margin-bottom:15px;" onclick="showPane('new-protocol-pane')">📁 Otvori Novi Protokol</button>
-            <div class="section-title">Fascikle / Protokoli</div>
+            <button class="btn btn-blue" style="width:100%; margin-bottom:20px;" onclick="showPane('new-protocol-pane')">📁 Otvori Novi Protokol</button>
+            <div class="section-title">Zavedeni Protokoli</div>
             <div id="sidebar-protocols-list"></div>
         </div>
     </div>
@@ -199,75 +236,89 @@
     <!-- MAIN CONTENT -->
     <div id="main-content">
         <header>
-            <h2 id="view-title">Ognjen Tech Assistant</h2>
-            <div>Ugrađena lokalna memorija [Aktivna]</div>
+            <h2>Ognjen Tech Assistant</h2>
+            <div style="font-weight: bold; color: var(--text-muted); font-size: 0.9rem;">Sistem Spreman</div>
         </header>
 
         <!-- PANE: NEW PROTOCOL -->
         <div id="new-protocol-pane" class="view-pane active-pane">
-            <h3>Kreiranje novog predmeta i protokola</h3>
-            <div style="background:#fff; padding:20px; border:1px solid var(--border-color); border-radius:4px; margin-top:15px;">
+            <h3>Pokretanje novog protokola</h3>
+            <div style="background:#fff; padding:25px; border:1px solid var(--border-color); border-radius:6px; margin-top:15px;">
+                
                 <div class="form-group">
-                    <label>Broj Protokola (npr. 1-5-26)</label>
-                    <input type="text" id="proto-id" placeholder="X-M-GG">
+                    <label>Izaberi boju fascikle:</label>
+                    <div class="color-picker-container">
+                        <div class="color-square selected" style="background-color: var(--folder-crvena);" onclick="selectColorSquare(this, 'var(--folder-crvena)')"></div>
+                        <div class="color-square" style="background-color: var(--folder-zuta);" onclick="selectColorSquare(this, 'var(--folder-zuta)')"></div>
+                        <div class="color-square" style="background-color: var(--folder-zelena);" onclick="selectColorSquare(this, 'var(--folder-zelena)')"></div>
+                        <div class="color-square" style="background-color: var(--folder-plava);" onclick="selectColorSquare(this, 'var(--folder-plava)')"></div>
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label>Izaberi boju fascikle</label>
-                    <select id="proto-color">
-                        <option value="var(--folder-crvena)">Crvena</option>
-                        <option value="var(--folder-zuta)">Žuta</option>
-                        <option value="var(--folder-zelena)">Zelena</option>
-                        <option value="var(--folder-plava)">Plava</option>
-                    </select>
+                    <label>Broj Protokola (npr. 12-06-2026)</label>
+                    <input type="text" id="proto-id" placeholder="Broj oznake" style="max-width: 300px;">
                 </div>
+                
                 <div class="form-group">
-                    <label>Inicijalni Predmet / Naziv saradnje</label>
+                    <label>Naziv predmeta</label>
                     <input type="text" id="proto-title" placeholder="Upiši naziv">
                 </div>
-                <button class="btn btn-blue" onclick="createProtocol()">Zavedi i otvori fasciklu</button>
+                
+                <button class="btn btn-blue" onclick="createProtocol()">Zavedi protokol</button>
             </div>
         </div>
 
-        <!-- PANE: PROTOCOL MANAGEMENT (THE CORE) -->
+        <!-- PANE: PROTOCOL MANAGEMENT -->
         <div id="protocol-manage-pane" class="view-pane">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
                 <h3 id="manage-proto-title">Protokol</h3>
-                <div>
-                    <button class="btn" onclick="window.print()">🖨️ Odštampaj trenutni list</button>
-                    <button class="btn btn-danger" onclick="deleteCurrentProtocol()">Obriši ovaj protokol</button>
-                </div>
+                <button class="btn btn-danger" onclick="deleteCurrentProtocol()">Obriši protokol</button>
             </div>
 
-            <!-- Uvoz Skeniranog Dokumenta -->
-            <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:4px; margin-bottom:20px;">
-                <label>📂 Uvezi slikan ili skeniran dokument u ovaj protokol:</label>
-                <input type="file" id="scan-uploader" accept="image/*" onchange="uploadScan(event)" style="margin-top:5px;">
-                <div id="scanned-zone" class="scanned-images-container"></div>
-            </div>
-
-            <!-- Dokument Generator i Editor -->
-            <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:4px;">
-                <h4>Konstruktor Dokumenta (Izaberi tip i kreiraj elemente)</h4>
+            <!-- Dokumenti -->
+            <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:6px; margin-bottom:20px;">
+                <h4>Dokumenti unutar ovog protokola:</h4>
+                <div id="protocol-docs-list" style="margin-top: 10px; margin-bottom: 15px;"></div>
                 
-                <div class="form-group" style="margin-top:10px;">
-                    <label>Tip Dokumenta:</label>
-                    <input type="text" id="document-type-input" placeholder="npr. Poziv za sednicu upravnog odbora / Ugovor o radu" style="font-weight:bold;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="new-doc-name-input" placeholder="Upiši naziv novog lista/dokumenta" style="flex: 1;">
+                    <button class="btn btn-blue" onclick="createNewDocumentInProtocol()">➕ Dodaj novi prazan list</button>
+                </div>
+            </div>
+
+            <!-- Skenirani prilozi -->
+            <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:6px; margin-bottom:20px;">
+                <label>📸 Zakači skeniranu/slikanu datoteku u ovaj protokol:</label>
+                <input type="file" id="scan-uploader" accept="image/*" onchange="uploadScan(event)" style="margin-top:5px;">
+                <div id="scanned-zone" class="scanned-images-container" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+            </div>
+
+            <!-- LIVE EDITOR (SA PREDEFINISANIM OBRAZCIMA) -->
+            <div id="document-editor-zone" style="display:none; background:#fff; padding:20px; border:1px solid var(--border-color); border-radius:6px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h4 id="active-document-title">Uređivanje dokumenta</h4>
+                    <button class="btn" onclick="window.print()">🖨️ Odštampaj ovaj list</button>
                 </div>
 
-                <!-- Kontrole za dodavanje bilo čega -->
-                <div class="controls-row">
-                    <strong style="align-self:center; font-size:0.85rem;">DODAJ U DOKUMENT:</strong>
-                    <button class="btn" onclick="addCustomElement('text')">+ Običan Tekst</button>
-                    <button class="btn" onclick="addCustomElement('heading')">+ Podnaslov</button>
-                    <button class="btn" onclick="addCustomElement('dropdown')">+ Padajući Meni</button>
-                    <button class="btn" onclick="addCustomElement('stamp')">+ Polje Pečat/Potpis</button>
+                <!-- BIRAČ PREDEFINISANIH OBRAZACA -->
+                <div style="background: #eaeded; padding: 15px; border-radius: 6px; margin-bottom: 20px;" class="print-hide">
+                    <label style="color: #000;">📑 Učitaj predefinisani obrazac za ovaj list:</label>
+                    <select id="template-selector" onchange="applyTemplateToDocument()" style="width: 100%; margin-top: 5px; font-weight: bold;">
+                        <option value="">-- Izaberi obrazac --</option>
+                        <option value="sednica">1. Poziv za sednicu Upravnog odbora i Dnevni red</option>
+                        <option value="ugovor">2. Profesionalni Ugovor o tehničkoj saradnji / Marketing</option>
+                        <option value="zapisnik">3. Zvanični Zapisnik sa sastanka / Protokol rada</option>
+                        <option value="odluka">4. Rešenje / Odluka rukovodioca o odobrenju projekta</option>
+                    </select>
+                    <p style="font-size: 0.8rem; margin-top: 5px; color: var(--text-muted);">*Napomena: Izborom obrasca učitava se kompletan tekstualni i strukturni kostur sa padajućim menijima.</p>
                 </div>
 
-                <!-- LIVE PREVIEW / PRINT SHEET -->
+                <!-- KANVAS ZA ŠTAMPU -->
                 <div id="doc-to-print" class="doc-canvas">
                     <!-- Fiksno obavezno Zaglavlje -->
                     <div class="doc-system-header">
-                        <img src="profilna.png" alt="Logo">
+                        <img src="profilna.png" alt="Ognjen Tech Logo">
                         <div class="doc-header-info">
                             <h2>Ognjen Filipović</h2>
                             <p>Cybersecurity enthusiast & Tech Content Creator</p>
@@ -275,27 +326,83 @@
                         </div>
                     </div>
 
-                    <!-- Dinamični Tip Dokumenta centriran -->
-                    <div style="text-align:center; margin-bottom:30px; font-weight:bold; font-size:1.2rem;" id="render-doc-type">
-                        [TIP DOKUMENTA]
+                    <!-- Dinamični Naslov Dokumenta -->
+                    <div style="text-align:center; margin-bottom:35px; font-weight:bold; font-size:1.3rem; text-transform: uppercase;" id="render-doc-type">
+                        DOKUMENT
                     </div>
 
-                    <!-- Ovde se ubacuje sve što Ognjen klikne -->
+                    <!-- Zona gde se učitavaju polja i padajući meniji izabranog obrasca -->
                     <div id="dynamic-elements-area"></div>
                 </div>
 
-                <button class="btn btn-blue" style="margin-top:15px;" onclick="saveDocumentLayout()">💾 Sačuvaj trenutni raspored elemenata</button>
+                <button class="btn btn-blue" style="margin-top:20px; width: 100%;" onclick="saveActiveDocumentLayout()">💾 Sačuvaj unete podatke u ovom listu</button>
             </div>
         </div>
     </div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('ognjen_v2_db')) || {};
+        let db = JSON.parse(localStorage.getItem('ognjen_v4_db')) || {};
         let activeProtocolId = null;
+        let activeDocumentIndex = null;
+        let selectedFolderColor = 'var(--folder-crvena)';
 
-        window.onload = function() {
-            renderSidebar();
+        // DEFINICIJA OBIMNIH OBRAZACA (Tekst + Padajući meniji)
+        const templates = {
+            sednica: [
+                { type: 'label', label: 'Institucija / Organizacija organa:' },
+                { type: 'input', placeholder: 'npr. Upravni Odbor Ognjen.Tech' },
+                { type: 'label', label: 'Mesto i datum održavanja sednice:' },
+                { type: 'input', placeholder: 'Mesto, dana DD.MM.GGGG. godine u XX:XX časova' },
+                { type: 'label', label: 'Tip sednice (Padajući meni):' },
+                { type: 'select', options: ['Redovna sednica', 'Vanredna sednica', 'Hitna elektronska sednica'] },
+                { type: 'label', label: 'Kompletan predloženi dnevni red (Unesi tačke):' },
+                { type: 'textarea', placeholder: '1. Razmatranje novih projekata...\n2. Finansijski izveštaj...\n3. Razno...' },
+                { type: 'label', label: 'Status kvoruma za odlučivanje:' },
+                { type: 'select', options: ['Kvorum je prisutan (Sednica je punovažna)', 'Nema kvoruma (Odlaže se)'] },
+                { type: 'stamp' }
+            ],
+            ugovor: [
+                { type: 'label', label: 'Ugovorne strane (Podaci o partneru):' },
+                { type: 'textarea', placeholder: 'Unesi pun naziv brenda, sedište, PIB i ovlašćeno lice...' },
+                { type: 'label', label: 'Predmet saradnje / Obaveze izvršioca:' },
+                { type: 'textarea', placeholder: 'Izrada tech video sadržaja, plasiranje na TikTok platformu, bezbednosna analiza sistema...' },
+                { type: 'label', label: 'Finansijska stavka / Budžet (Padajući meni):' },
+                { type: 'select', options: ['Plaćeno sponzorstvo (Fiksni budžet)', 'Kompenzacija hardvera/periferija', 'Pro-bono / Affiliate model'] },
+                { type: 'label', label: 'Rok izvršenja i trajanje ugovora:' },
+                { type: 'input', placeholder: 'Ugovor stupa na snagu odmah i traje do završetka projekta.' },
+                { type: 'label', label: 'Nadležnost u slučaju spora:' },
+                { type: 'select', options: ['Sporazumno rešavanje', 'Nadležni sud u Aranđelovcu', 'Privredni sud u Beogradu'] },
+                { type: 'stamp' }
+            ],
+            zapisnik: [
+                { type: 'label', label: 'Zapisnik sa poslovnog sastanka povodom predmeta:' },
+                { type: 'input', placeholder: 'Upiši temu sastanka' },
+                { type: 'label', label: 'Prisutna lica i koordinatori:' },
+                { type: 'textarea', placeholder: 'Navedite imena svih prisutnih na sastanku...' },
+                { type: 'label', label: 'Tok sastanka i iznete diskusije:' },
+                { type: 'textarea', placeholder: 'Detaljan opis toka razgovora, primedbi i predloga...' },
+                { type: 'label', label: 'Zaključak sastanka:' },
+                { type: 'select', options: ['Sve tačke uspešno usvojene', 'Potrebno doraditi plan', 'Pregovori obustavljeni'] },
+                { type: 'stamp' }
+            ],
+            odluka: [
+                { type: 'label', label: 'Pravni osnov / Odluka o:' },
+                { type: 'input', placeholder: 'npr. Odobrenju budžeta za nabavku opreme' },
+                { type: 'label', label: 'Tekst obrazloženja odluke:' },
+                { type: 'textarea', placeholder: 'Imajući u vidu potrebe za razvojem sistema i novih digitalnih kanala, donosi se odluka...' },
+                { type: 'label', label: 'Stepen hitnosti izvršenja:' },
+                { type: 'select', options: ['Hitno (Rok 24h)', 'Redovna procedura', 'Strateški plan dugog roka'] },
+                { type: 'stamp' }
+            ]
         };
+
+        window.onload = function() { renderSidebar(); };
+
+        function selectColorSquare(element, colorValue) {
+            document.querySelectorAll('.color-square').forEach(sq => sq.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedFolderColor = colorValue;
+        }
 
         function showPane(id) {
             document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active-pane'));
@@ -304,255 +411,154 @@
 
         function createProtocol() {
             let id = document.getElementById('proto-id').value.trim();
-            let color = document.getElementById('proto-color').value;
             let title = document.getElementById('proto-title').value.trim();
+            if(!id || !title) { alert('Unesi broj protokola i naziv!'); return; }
 
-            if(!id || !title) {
-                alert('Unesi broj protokola i naziv!');
-                return;
-            }
-
-            db[id] = {
-                id: id,
-                color: color,
-                title: title,
-                docType: "ZAPISNIK / DOKUMENT",
-                scans: [],
-                elements: []
-            };
-
-            saveToStorage();
-            renderSidebar();
-            openProtocol(id);
+            db[id] = { id: id, color: selectedFolderColor, title: title, scans: [], documents: [] };
+            saveToStorage(); renderSidebar(); openProtocol(id);
+            document.getElementById('proto-id').value = ''; document.getElementById('proto-title').value = '';
         }
 
         function renderSidebar() {
-            let list = document.getElementById('sidebar-protocols-list');
-            list.innerHTML = '';
+            let list = document.getElementById('sidebar-protocols-list'); list.innerHTML = '';
             Object.values(db).forEach(p => {
-                let div = document.createElement('div');
-                div.className = 'protocol-item';
-                div.onclick = () => openProtocol(p.id);
-                
-                let dot = document.createElement('div');
-                dot.className = 'folder-dot';
-                dot.style.backgroundColor = p.color;
-
-                div.appendChild(dot);
-                div.appendChild(document.createTextNode(`Prot. ${p.id} - ${p.title}`));
-                list.appendChild(div);
+                let div = document.createElement('div'); div.className = 'protocol-item'; div.onclick = () => openProtocol(p.id);
+                let box = document.createElement('div'); box.className = 'folder-box'; box.style.backgroundColor = p.color;
+                div.appendChild(box); div.appendChild(document.createTextNode(`Prot. ${p.id} - ${p.title}`)); list.appendChild(div);
             });
         }
 
         function openProtocol(id) {
-            activeProtocolId = id;
-            let p = db[id];
-            
-            document.getElementById('manage-proto-title').innerText = `Fascikla Protokola: ${p.id} (${p.title})`;
-            document.getElementById('document-type-input').value = p.docType || "";
-            document.getElementById('render-doc-type').innerText = p.docType ? p.docType.toUpperCase() : "[UPIŠI TIP DOKUMENTA]";
-
-            // Isprati promene tipa dokumenta uživo
-            document.getElementById('document-type-input').oninput = function() {
-                document.getElementById('render-doc-type').innerText = this.value.toUpperCase();
-            };
-
-            // Učitaj skenirane dokumente
-            renderScans(p.scans);
-
-            // Učitaj elemente konstrukcije
-            let area = document.getElementById('dynamic-elements-area');
-            area.innerHTML = '';
-            if(p.elements && p.elements.length > 0) {
-                p.elements.forEach(el => {
-                    recreateSavedElement(el.type, el.value, el.options);
-                });
-            }
-
-            showPane('protocol-manage-pane');
+            activeProtocolId = id; activeDocumentIndex = null;
+            document.getElementById('manage-proto-title').innerText = `Protokol: ${db[id].id} — ${db[id].title}`;
+            document.getElementById('document-editor-zone').style.display = 'none';
+            document.getElementById('new-doc-name-input').value = '';
+            renderProtocolDocumentsList(); renderScans(db[id].scans); showPane('protocol-manage-pane');
         }
 
-        // Dinamičko dodavanje elemenata na zahtev
-        function addCustomElement(type) {
-            recreateSavedElement(type, '', '');
+        function renderProtocolDocumentsList() {
+            let container = document.getElementById('protocol-docs-list'); container.innerHTML = '';
+            db[activeProtocolId].documents.forEach((doc, index) => {
+                let d = document.createElement('div'); d.className = 'doc-link-item'; d.innerText = `📄 ${doc.name.toUpperCase()}`;
+                d.onclick = () => loadDocumentIntoEditor(index); container.appendChild(d);
+            });
         }
 
-        function recreateSavedElement(type, savedValue, savedOptions) {
-            let area = document.getElementById('dynamic-elements-area');
-            let wrapper = document.createElement('div');
-            wrapper.className = 'dynamic-element';
-            wrapper.setAttribute('data-type', type);
-
-            if (type === 'text') {
-                let textarea = document.createElement('textarea');
-                textarea.style.width = "100%";
-                textarea.style.fontFamily = "Courier New";
-                textarea.rows = 4;
-                textarea.placeholder = "Ovde slobodno kucaj tekst dokumenta...";
-                textarea.value = savedValue;
-                wrapper.appendChild(textarea);
-            } 
-            else if (type === 'heading') {
-                let input = document.createElement('input');
-                input.style.width = "100%";
-                input.style.fontWeight = "bold";
-                input.style.fontFamily = "Courier New";
-                input.placeholder = "PODNASLOV / GLAVA (npr. DNEVNI RED:)";
-                input.value = savedValue;
-                wrapper.appendChild(input);
-            } 
-            else if (type === 'dropdown') {
-                let select = document.createElement('select');
-                select.style.fontFamily = "Courier New";
-                
-                // Generisanje opcija (Možeš dodati i druge stvari koje ti trebaju)
-                let ops = savedOptions ? savedOptions : ["Izaberi opciju", "Saradnja", "Freelancing", "Hitno snimanje", "Usvojeno", "Odbijeno"];
-                ops.forEach(o => {
-                    let opt = document.createElement('option');
-                    opt.value = o;
-                    opt.innerText = o;
-                    if(o === savedValue) opt.selected = true;
-                    select.appendChild(opt);
-                });
-                wrapper.appendChild(select);
-            } 
-            else if (type === 'stamp') {
-                let flex = document.createElement('div');
-                flex.style.display = "flex";
-                flex.style.justifyContent = "space-between";
-                flex.style.marginTop = "30px";
-                flex.innerHTML = `
-                    <div class="stamp-box">M.P. SYSTEM BOX<br>KVADRAT PEČATA</div>
-                    <div style="text-align:right; align-self: flex-end;">
-                        <p>POTPIS ODGOVORNOG LICA:</p>
-                        <br>
-                        <p>___________________________</p>
-                    </div>
-                `;
-                wrapper.appendChild(flex);
-            }
-
-            // Dugme za brisanje pojedinačnog elementa sa liste
-            let delBtn = document.createElement('button');
-            delBtn.innerText = "Ukloni stavku";
-            delBtn.className = "btn btn-danger";
-            delBtn.style.fontSize = "0.7rem";
-            delBtn.style.padding = "2px 5px";
-            delBtn.style.marginTop = "5px";
-            delBtn.style.display = "block";
-            delBtn.onclick = function() { wrapper.remove(); };
-            
-            // Sakrij dugme za brisanje tokom štampe
-            delBtn.setAttribute('style', 'margin-top:5px; font-size:0.7rem; padding:2px 5px;');
-            delBtn.classList.add('print-hide');
-            
-            // Dodavanje stila za skrivanje u štampi
-            let style = document.createElement('style');
-            style.innerHTML = "@media print { .print-hide { display: none !important; } }";
-            document.head.appendChild(style);
-            delBtn.classList.add('print-hide');
-
-            wrapper.appendChild(delBtn);
-            area.appendChild(wrapper);
+        function createNewDocumentInProtocol() {
+            let name = document.getElementById('new-doc-name-input').value.trim();
+            if(!name) { alert('Unesi naziv!'); return; }
+            db[activeProtocolId].documents.push({ name: name, templateKey: '', elements: [] });
+            saveToStorage(); renderProtocolDocumentsList();
+            loadDocumentIntoEditor(db[activeProtocolId].documents.length - 1);
+            document.getElementById('new-doc-name-input').value = '';
         }
 
-        // Čuvanje trenutnog stanja elemenata u memoriju browsera
-        function saveDocumentLayout() {
-            if(!activeProtocolId) return;
+        function loadDocumentIntoEditor(index) {
+            activeDocumentIndex = index;
+            let doc = db[activeProtocolId].documents[index];
+            document.getElementById('active-document-title').innerText = `Uređivanje: ${doc.name}`;
+            document.getElementById('render-doc-type').innerText = doc.name.toUpperCase();
+            document.getElementById('template-selector').value = doc.templateKey || '';
             
-            let p = db[activeProtocolId];
-            p.docType = document.getElementById('document-type-input').value;
-            p.elements = [];
+            buildFormFromData(doc.elements);
+            document.getElementById('document-editor-zone').style.display = 'block';
+        }
 
-            let elements = document.getElementById('dynamic-elements-area').children;
-            for(let el of elements) {
-                let type = el.getAttribute('data-type');
-                let value = "";
-                let options = [];
+        // Automatsko generisanje celog izabranog obrasca
+        function applyTemplateToDocument() {
+            let key = document.getElementById('template-selector').value;
+            if(!key) return;
+            db[activeProtocolId].documents[activeDocumentIndex].templateKey = key;
+            buildFormFromData(templates[key]);
+        }
 
-                if(type === 'text') {
-                    value = el.querySelector('textarea').value;
-                } else if(type === 'heading') {
-                    value = el.querySelector('input').value;
-                } else if(type === 'dropdown') {
-                    value = el.querySelector('select').value;
-                    el.querySelectorAll('select option').forEach(o => options.push(o.value));
+        function buildFormFromData(elementsArray) {
+            let area = document.getElementById('dynamic-elements-area'); area.innerHTML = '';
+            if(!elementsArray || elementsArray.length === 0) return;
+
+            elementsArray.forEach(el => {
+                let row = document.createElement('div');
+                row.className = 'template-row';
+                row.setAttribute('data-type', el.type);
+
+                if(el.type === 'label') {
+                    let l = document.createElement('label'); l.innerText = el.label;
+                    row.appendChild(l);
+                } 
+                else if(el.type === 'input') {
+                    let input = document.createElement('input'); input.placeholder = el.placeholder || '';
+                    input.value = el.value || ''; row.appendChild(input);
+                } 
+                else if(el.type === 'textarea') {
+                    let tx = document.createElement('textarea'); tx.rows = 4; tx.placeholder = el.placeholder || '';
+                    tx.value = el.value || ''; row.appendChild(tx);
+                } 
+                else if(el.type === 'select') {
+                    let sel = document.createElement('select');
+                    el.options.forEach(o => {
+                        let opt = document.createElement('option'); opt.value = o; opt.innerText = o;
+                        if(o === el.value) opt.selected = true; sel.appendChild(opt);
+                    });
+                    row.appendChild(sel);
+                } 
+                else if(el.type === 'stamp') {
+                    row.innerHTML = `<div style="display:flex; justify-content:space-between; margin-top:40px;">
+                        <div class="stamp-box">M.P. SYSTEM BOX<br>KVADRAT PEČATA</div>
+                        <div style="text-align:right; align-self: flex-end;"><p>POTPIS ODGOVORNOG LICA:</p><br><p>___________________________</p></div>
+                    </div>`;
                 }
-
-                p.elements.push({ type: type, value: value, options: options });
-            }
-
-            saveToStorage();
-            alert('Struktura dokumenta je besprekorno sačuvana u memoriji protokola!');
+                area.appendChild(row);
+            });
         }
 
-        // Rad sa skeniranim/slikanim dokumentima (Base64 uvoz)
-        function uploadScan(event) {
-            let file = event.target.files[0];
-            if (!file) return;
+        function saveActiveDocumentLayout() {
+            let doc = db[activeProtocolId].documents[activeDocumentIndex];
+            doc.elements = [];
+            let rows = document.getElementById('dynamic-elements-area').children;
 
+            for(let r of rows) {
+                let type = r.getAttribute('data-type');
+                let item = { type: type };
+
+                if(type === 'label') { item.label = r.querySelector('label').innerText; }
+                else if(type === 'input') { item.value = r.querySelector('input').value; item.placeholder = r.querySelector('input').placeholder; }
+                else if(type === 'textarea') { item.value = r.querySelector('textarea').value; item.placeholder = r.querySelector('textarea').placeholder; }
+                else if(type === 'select') {
+                    item.value = r.querySelector('select').value; item.options = [];
+                    r.querySelectorAll('select option').forEach(o => item.options.push(o.value));
+                }
+                doc.elements.push(item);
+            }
+            saveToStorage(); alert('Podaci unutar obrasca su trajno sačuvani!');
+        }
+
+        function uploadScan(event) {
+            let file = event.target.files[0]; if (!file) return;
             let reader = new FileReader();
             reader.onload = function(e) {
-                if(!activeProtocolId) return;
-                db[activeProtocolId].scans.push(e.target.result);
-                saveToStorage();
-                renderScans(db[activeProtocolId].scans);
+                db[activeProtocolId].scans.push(e.target.result); saveToStorage(); renderScans(db[activeProtocolId].scans);
             };
             reader.readAsDataURL(file);
         }
 
         function renderScans(scansList) {
-            let container = document.getElementById('scanned-zone');
-            container.innerHTML = '';
-            if(scansList && scansList.length > 0) {
-                scansList.forEach((imgData, index) => {
-                    let div = document.createElement('div');
-                    div.style.position = "relative";
-                    div.style.display = "inline-block";
-                    div.style.marginRight = "10px";
-
-                    let img = document.createElement('img');
-                    img.src = imgData;
-                    img.style.height = "15px"; // Mini sličica u kontrolnoj tabli
-                    img.style.cursor = "pointer";
-                    img.title = "Klikni da otvoriš veliku sliku";
-                    img.onclick = () => {
-                        let win = window.open();
-                        win.document.write(`<img src="${imgData}" style="max-width:100%;">`);
-                    };
-
-                    let del = document.createElement('button');
-                    del.innerText = "X";
-                    del.style.position = "absolute";
-                    del.style.top = "0";
-                    del.style.right = "0";
-                    del.style.background = "red";
-                    del.style.color = "white";
-                    del.onclick = () => {
-                        db[activeProtocolId].scans.splice(index, 1);
-                        saveToStorage();
-                        renderScans(db[activeProtocolId].scans);
-                    };
-
-                    div.appendChild(img);
-                    div.appendChild(del);
-                    container.appendChild(div);
-                });
-            }
+            let container = document.getElementById('scanned-zone'); container.innerHTML = '';
+            scansList.forEach((imgData, index) => {
+                let div = document.createElement('div'); div.style.position = "relative";
+                let img = document.createElement('img'); img.src = imgData; img.style.cursor = "pointer";
+                img.onclick = () => { let w = window.open(); w.document.write(`<img src="${imgData}" style="max-width:100%;">`); };
+                let del = document.createElement('button'); del.innerText = "✖"; del.className = "btn btn-danger print-hide";
+                del.style = "position:absolute; top:5px; right:5px; padding:2px 6px;";
+                del.onclick = () => { db[activeProtocolId].scans.splice(index, 1); saveToStorage(); renderScans(db[activeProtocolId].scans); };
+                div.appendChild(img); div.appendChild(del); container.appendChild(div);
+            });
         }
 
         function deleteCurrentProtocol() {
-            if(confirm('Da li ste sigurni da želite da obrišete ovaj protokol i sve njegove dokumente?')) {
-                delete db[activeProtocolId];
-                saveToStorage();
-                renderSidebar();
-                showPane('new-protocol-pane');
-            }
+            if(confirm('Obrisati ceo protokol i sve fajlove?')) { delete db[activeProtocolId]; saveToStorage(); renderSidebar(); showPane('new-protocol-pane'); }
         }
 
-        function saveToStorage() {
-            localStorage.setItem('ognjen_v2_db', JSON.stringify(db));
-        }
+        function saveToStorage() { localStorage.setItem('ognjen_v4_db', JSON.stringify(db)); }
     </script>
 </body>
 </html>
