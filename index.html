@@ -246,7 +246,7 @@
             <div style="background:#fff; padding:25px; border:1px solid var(--border-color); border-radius:6px; margin-top:15px;">
                 
                 <div class="form-group">
-                    <label>Izaberi boju fascikle:</label>
+                    <label>Izaberi boju fascikle (Klikni na kvadrat):</label>
                     <div class="color-picker-container">
                         <div class="color-square selected" style="background-color: var(--folder-crvena);" onclick="selectColorSquare(this, 'var(--folder-crvena)')"></div>
                         <div class="color-square" style="background-color: var(--folder-zuta);" onclick="selectColorSquare(this, 'var(--folder-zuta)')"></div>
@@ -303,15 +303,16 @@
 
                 <!-- BIRAČ PREDEFINISANIH OBRAZACA -->
                 <div style="background: #eaeded; padding: 15px; border-radius: 6px; margin-bottom: 20px;" class="print-hide">
-                    <label style="color: #000;">📑 Učitaj predefinisani obrazac za ovaj list:</label>
-                    <select id="template-selector" onchange="applyTemplateToDocument()" style="width: 100%; margin-top: 5px; font-weight: bold;">
+                    <label style="color: #000; font-weight: bold;">📑 Učitaj predefinisani blanko obrazac:</label>
+                    <select id="template-selector" onchange="applyTemplateToDocument()" style="width: 100%; margin-top: 5px; font-weight: bold; border: 1px solid #777;">
                         <option value="">-- Izaberi obrazac --</option>
-                        <option value="sednica">1. Poziv za sednicu Upravnog odbora i Dnevni red</option>
-                        <option value="ugovor">2. Profesionalni Ugovor o tehničkoj saradnji / Marketing</option>
-                        <option value="zapisnik">3. Zvanični Zapisnik sa sastanka / Protokol rada</option>
-                        <option value="odluka">4. Rešenje / Odluka rukovodioca o odobrenju projekta</option>
+                        <option value="potvrda_saradnik">1. Blanko Potvrda o statusu spoljnog saradnika / Partnera</option>
+                        <option value="potvrda_izvrseno">2. Potvrda o uspešno izvršenim ugovornim obavezama (Završen posao)</option>
+                        <option value="sednica">3. Poziv za sednicu Upravnog odbora i Dnevni red</option>
+                        <option value="ugovor">4. Profesionalni Ugovor o tehničkoj saradnji / Marketing</option>
+                        <option value="zapisnik">5. Zvanični Zapisnik sa sastanka / Protokol rada</option>
+                        <option value="odluka">6. Rešenje / Odluka rukovodioca o odobrenju projekta</option>
                     </select>
-                    <p style="font-size: 0.8rem; margin-top: 5px; color: var(--text-muted);">*Napomena: Izborom obrasca učitava se kompletan tekstualni i strukturni kostur sa padajućim menijima.</p>
                 </div>
 
                 <!-- KANVAS ZA ŠTAMPU -->
@@ -346,8 +347,34 @@
         let activeDocumentIndex = null;
         let selectedFolderColor = 'var(--folder-crvena)';
 
-        // DEFINICIJA OBIMNIH OBRAZACA (Tekst + Padajući meniji)
+        // PROŠIRENA BAZA OBRAZACA (Dodate tražene potvrde)
         const templates = {
+            potvrda_saradnik: [
+                { type: 'label', label: 'PREDMET DOKUMENTA:' },
+                { type: 'input', placeholder: 'POTVRDA O STATUSU ZVANIČNOG SARADNIKA' },
+                { type: 'label', label: 'PODACI O SARADNIKU / PARTNERU (Ime, prezime, naziv firme/brenda):' },
+                { type: 'input', placeholder: 'Unesite podatke lica ili kompanije kojoj se izdaje potvrda' },
+                { type: 'label', label: 'STATUS SARADNJE (Padajući meni):' },
+                { type: 'select', options: ['Aktivan eksterni saradnik', 'Strateški B2B partner', 'Tehnički konsultant', 'Zvanični moderator kanala'] },
+                { type: 'label', label: 'TEKST POTVRDE / PRAVNI OSNOV:' },
+                { type: 'textarea', placeholder: 'Ovom ispravom se zvanično potvrđuje da je gorenavedeno lice aktivni partner na projektima u okviru Ognjen.Tech platforme, sa punim pravom zastupanja dogovorenih tehničkih interesa u javnosti.' },
+                { type: 'label', label: 'ROK VAŽENJA POTVRDE:' },
+                { type: 'select', options: ['Do opoziva / Trajno', 'Ograničeno na trajanje aktuelnog projekta', 'Do kraja tekuće kalendarske godine'] },
+                { type: 'stamp' }
+            ],
+            potvrda_izvrseno: [
+                { type: 'label', label: 'PREDMET DOKUMENTA:' },
+                { type: 'input', placeholder: 'POTVRDA O USPEŠNO IZVRŠENOM POSLU I ZADACIMA' },
+                { type: 'label', label: 'IZVRŠILAC POSLA / KOOPERANT:' },
+                { type: 'input', placeholder: 'Ime i prezime / Naziv agencije ili brenda' },
+                { type: 'label', label: 'OPIS IZVRŠENOG PROJEKTA / ZADATKA:' },
+                { type: 'textarea', placeholder: 'Navedite tačan posao koji je urađen (npr. Isporučene komponente, montiran video materijal, urađena revizija koda, postavljen HIS sistem na GitHub...)' },
+                { type: 'label', label: 'OCENA KVALITETA I REALIZACIJE (Padajući meni):' },
+                { type: 'select', options: ['Zadatak izvršen besprekorno i u roku', 'Zadatak izvršen uspešno uz sitne dopune', 'Projekat realizovan u potpunosti'] },
+                { type: 'label', label: 'FINANSIJSKO-UGOVORNI STATUS:' },
+                { type: 'select', options: ['Sve ugovorne obaveze i isplate su u potpunosti namirene', 'Kompenzacija uspešno obavljena', 'Nema daljih potraživanja među ugovornim stranama'] },
+                { type: 'stamp' }
+            ],
             sednica: [
                 { type: 'label', label: 'Institucija / Organizacija organa:' },
                 { type: 'input', placeholder: 'npr. Upravni Odbor Ognjen.Tech' },
@@ -464,7 +491,6 @@
             document.getElementById('document-editor-zone').style.display = 'block';
         }
 
-        // Automatsko generisanje celog izabranog obrasca
         function applyTemplateToDocument() {
             let key = document.getElementById('template-selector').value;
             if(!key) return;
