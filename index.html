@@ -3,308 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ognjen Tech Assistant v1.0</title>
+    <title>Ognjen Tech Assistant - Professional</title>
     <style>
-        /* Dark Tech Aesthetic - Stealth & Clean Theme */
+        /* Profesionalna Svetla Tema */
         :root {
-            --bg-primary: #0a0a0c;
-            --bg-secondary: #121216;
-            --bg-tertiary: #1a1a22;
-            --accent-color: #58a6ff;
-            --text-main: #e6edf3;
-            --text-muted: #8b949e;
-            --border-color: #30363d;
-            --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --font-doc: 'Courier New', Courier, monospace;
+            --bg-main: #f8f9fa;
+            --bg-sidebar: #ffffff;
+            --border-color: #cccccc;
+            --text-main: #212529;
+            --text-muted: #6c757d;
+            --accent-blue: #0056b3;
+            
+            /* Boje fascikli */
+            --folder-crvena: #dc3545;
+            --folder-zuta: #ffc107;
+            --folder-zelena: #28a745;
+            --folder-plava: #007bff;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background-color: var(--bg-primary);
+            background-color: var(--bg-main);
             color: var(--text-main);
-            font-family: var(--font-ui);
+            font-family: Arial, sans-serif;
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Sidebar Navigation */
+        /* Sidebar */
         #sidebar {
-            width: 280px;
-            background-color: var(--bg-secondary);
-            border-right: 1px solid var(--border-color);
+            width: 300px;
+            background-color: var(--bg-sidebar);
+            border-right: 2px solid var(--border-color);
             display: flex;
             flex-direction: column;
             height: 100%;
         }
-
         .sidebar-header {
             padding: 20px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
             text-align: center;
+            background: #f1f3f5;
         }
-
-        .sidebar-header h2 {
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-            color: var(--text-main);
-            font-weight: 700;
+        .sidebar-header img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
         }
-
-        .sidebar-header p {
-            font-size: 0.75rem;
-            color: var(--accent-color);
-            margin-top: 4px;
-            text-transform: uppercase;
-        }
-
-        .menu-section {
-            padding: 15px 10px;
-        }
-
-        .menu-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            padding-left: 10px;
-            letter-spacing: 0.5px;
-        }
-
-        .menu-item {
+        .menu-section { padding: 15px; flex: 1; overflow-y: auto; }
+        .section-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: bold; margin-bottom: 10px; }
+        
+        .protocol-item {
             display: flex;
             align-items: center;
             padding: 10px;
-            color: var(--text-main);
-            text-decoration: none;
-            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 0.9rem;
-            margin-bottom: 4px;
-            transition: background 0.2s;
-            background: transparent;
-            border: none;
-            width: 100%;
-            text-align: left;
-        }
-
-        .menu-item:hover, .menu-item.active {
-            background-color: var(--bg-tertiary);
-            color: var(--accent-color);
-        }
-
-        #protocols-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 10px;
-        }
-
-        .protocol-btn {
-            font-family: var(--font-doc);
+            margin-bottom: 8px;
             font-weight: bold;
         }
-
-        .sidebar-footer {
-            padding: 15px;
-            border-top: 1px solid var(--border-color);
+        .protocol-item:hover { background: #f1f3f5; }
+        .folder-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            margin-right: 10px;
+            border: 1px solid rgba(0,0,0,0.2);
         }
 
-        .btn-action {
-            width: 100%;
-            background-color: var(--bg-tertiary);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
-
-        .btn-action:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-        }
-
-        /* Main Content Container */
-        #main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--bg-primary);
-            overflow: hidden;
-        }
-
+        /* Main Content */
+        #main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         header {
-            height: 65px;
-            background-color: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
+            height: 60px;
+            background: #fff;
+            border-bottom: 2px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 30px;
+            padding: 0 20px;
         }
+        .view-pane { flex: 1; padding: 25px; overflow-y: auto; display: none; }
+        .active-pane { display: block; }
 
-        .view-pane {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .view-pane.active-pane {
-            display: block;
-        }
-
-        /* Form Styling */
-        h3 {
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
+        /* Form Controls */
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        label { font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
         input, select, textarea {
-            background-color: var(--bg-secondary);
+            padding: 8px;
             border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            outline: none;
-            font-family: var(--font-ui);
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--accent-color);
-        }
-
-        .btn-primary {
-            background-color: var(--accent-color);
-            color: #050505;
-            font-weight: 600;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-
-        /* Protocols Dashboard / Table Dashboard */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-
-        .data-table th, .data-table td {
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            text-align: left;
-        }
-
-        .data-table th {
-            background-color: var(--bg-secondary);
-            color: var(--text-muted);
-        }
-
-        .data-table tr:hover {
-            background-color: var(--bg-tertiary);
-        }
-
-        /* Document Template UI for Preview */
-        .doc-preview-box {
-            background-color: #ffffff;
-            color: #000000;
-            padding: 40px;
-            font-family: var(--font-doc);
-            line-height: 1.5;
             border-radius: 4px;
+            font-size: 0.95rem;
+            background: #fff;
+            color: #000;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #fff;
+        }
+        .btn-blue { background: var(--accent-blue); color: #fff; border: none; }
+        .btn-danger { background: #dc3545; color: #fff; border: none; }
+
+        /* Document Blueprint Editor / Render */
+        .doc-canvas {
+            background: #fff;
+            color: #000;
+            padding: 40px;
+            border: 2px solid #000;
+            font-family: 'Courier New', Courier, monospace;
             margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            white-space: pre-wrap;
-            position: relative;
+            min-height: 600px;
         }
-
-        .print-actions {
-            margin-bottom: 15px;
+        .doc-system-header {
             display: flex;
-            gap: 10px;
-        }
-
-        /* Legal Footnotes & Layout inside Preview */
-        .doc-header-block {
-            border-bottom: 2px double #000;
-            padding-bottom: 10px;
+            align-items: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 15px;
             margin-bottom: 25px;
         }
+        .doc-system-header img {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+            border: 1px solid #000;
+        }
+        .doc-header-info h2 { font-size: 1.4rem; font-weight: bold; }
+        .doc-header-info p { font-size: 0.9rem; margin-top: 2px; }
 
-        .corporate-stamp-box {
+        .dynamic-element {
+            margin-bottom: 15px;
+            padding: 5px;
+            border: 1px dashed transparent;
+        }
+        .dynamic-element:hover { border-color: #999; }
+        
+        .stamp-box {
             border: 2px solid #000;
-            width: 150px;
-            height: 150px;
+            width: 140px;
+            height: 140px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
             text-align: center;
             font-weight: bold;
-            margin-top: 30px;
         }
 
-        /* Printable setup */
+        .scanned-images-container img {
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Print Override */
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #main-content, .doc-preview-box, .doc-preview-box * {
-                visibility: visible;
-            }
-            .doc-preview-box {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                box-shadow: none;
-                padding: 0;
-                color: #000000;
-                background: #ffffff;
-            }
-            .print-actions, header, #sidebar {
-                display: none !important;
-            }
+            body * { visibility: hidden; }
+            #doc-to-print, #doc-to-print * { visibility: visible; }
+            #doc-to-print { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; }
+            input, select, textarea { border: none; background: transparent; appearance: none; -webkit-appearance: none; padding: 0; font-family: 'Courier New', Courier, monospace; font-size: 1rem; }
         }
     </style>
 </head>
@@ -313,471 +186,372 @@
     <!-- SIDEBAR -->
     <div id="sidebar">
         <div class="sidebar-header">
-            <h2>OGNJEN TECH</h2>
-            <p>Assistant System [hq]</p>
+            <img src="profilna.png" alt="Ognjen Tech Logo">
+            <h3 style="margin-top: 5px; font-size: 1.1rem;">Centralna Arhiva</h3>
         </div>
-
         <div class="menu-section">
-            <div class="menu-title">Glavni moduli</div>
-            <button class="menu-item active" onclick="switchPane('dashboard-pane')">📊 Dashboard</button>
-            <button class="menu-item" onclick="switchPane('dokumentacija-pane')">🗂️ Modul: Dokumentacija</button>
-        </div>
-
-        <div class="menu-section" style="flex: 1; display:flex; flex-direction:column;">
-            <div class="menu-title">Aktivni Protokoli</div>
-            <div id="protocols-list">
-                <!-- Dynamically generated protocols -->
-            </div>
-        </div>
-
-        <div class="sidebar-footer">
-            <button class="btn-action" onclick="openNewProtocolForm()">➕ Otvori Novi Protokol</button>
+            <button class="btn btn-blue" style="width:100%; margin-bottom:15px;" onclick="showPane('new-protocol-pane')">📁 Otvori Novi Protokol</button>
+            <div class="section-title">Fascikle / Protokoli</div>
+            <div id="sidebar-protocols-list"></div>
         </div>
     </div>
 
-    <!-- MAIN APP CONTENT -->
+    <!-- MAIN CONTENT -->
     <div id="main-content">
         <header>
-            <h2 id="current-view-title">Dashboard</h2>
-            <span id="system-clock" style="color: var(--text-muted); font-size: 0.85rem;"></span>
+            <h2 id="view-title">Ognjen Tech Assistant</h2>
+            <div>Ugrađena lokalna memorija [Aktivna]</div>
         </header>
 
-        <!-- PANE: DASHBOARD -->
-        <div id="dashboard-pane" class="view-pane active-pane">
-            <h3>Sistemski Pregled</h3>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">Dobrodošli u Ognjen Tech centralnu komandu. Svi podaci su osigurani unutar lokalne memorije pretraživača.</p>
-            
-            <div style="background: var(--bg-secondary); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 30px;">
-                <h4>Osnovni Strateški Parametri</h4>
-                <p style="font-size: 0.9rem; margin-top: 10px;">Estetika: <strong>Dark Tech Aesthetic</strong> | Edit: <strong>Brzi rezovi, Dinamičan edit & Macro B-Roll</strong></p>
-            </div>
-
-            <h4>Lista svih pokrenutih protokola</h4>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Broj Protokola</th>
-                        <th>Predmet</th>
-                        <th>Brend / Kvartal</th>
-                        <th>Kontakt Osoba</th>
-                        <th>Prihod (RSD)</th>
-                    </tr>
-                </thead>
-                <tbody id="dashboard-table-body">
-                    <!-- Loaded dynamically via JS -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- PANE: NEW PROTOCOL FORM -->
-        <div id="new-protocol-pane" class="view-pane">
-            <h3>Otvaranje Protokolarnog Lista</h3>
-            <form id="protocol-form" onsubmit="saveProtocol(event)">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Broj protokola (format: npr. 1-5-26)</label>
-                        <input type="text" id="p-id" placeholder="X-M-GG" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Datum i vreme otvaranja</label>
-                        <input type="datetime-local" id="p-datetime" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Predmet (Padajući meni)</label>
-                        <select id="p-predmet" onchange="togglePrethodnaDoc(this.value)">
-                            <option value="saradnja">Saradnja</option>
-                            <option value="freelancing">Freelancing</option>
-                            <option value="stratesko kvartalni plan/dokument">Strateško kvartalni plan/dokument</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Brend / Kvartal</label>
-                        <input type="text" id="p-brend" placeholder="npr. Marvo / Jul-Avgust" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Prethodna dokumentacija (+/-)</label>
-                        <select id="p-prethodna-status" onchange="togglePrethodnaInput(this.value)">
-                            <option value="-">- Nema</option>
-                            <option value="+">+ Ima</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="prethodna-doc-field" style="display: none;">
-                        <label>Unesi podatke o prethodnoj dokumentaciji</label>
-                        <input type="text" id="p-prethodna-text" placeholder="Broj ugovora ili rešenja">
-                    </div>
-                    <div class="form-group">
-                        <label>Kontakt osoba</label>
-                        <input type="text" id="p-kontakt" placeholder="Ime i prezime / Email">
-                    </div>
-                    <div class="form-group">
-                        <label>Broj videa</label>
-                        <input type="number" id="p-broj-videa" placeholder="Broj planiranih videa">
-                    </div>
-                    <div class="form-group">
-                        <label>Projektovani Prihod</label>
-                        <input type="text" id="p-prihod" placeholder="Iznos u RSD ili kompenzacija">
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Detalji saradnje / Koncept rezultat</label>
-                        <textarea id="p-detalji" rows="4" placeholder="Detaljan opis ciljeva..."></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Napomene i dodatni podaci</label>
-                        <textarea id="p-napomene" rows="3" placeholder="Dodatne sistemske beleške..."></textarea>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">💾 Zavedi Protokol u Memoriju</button>
-            </form>
-        </div>
-
-        <!-- PANE: PROTOCOL MODUL VIEW -->
-        <div id="protocol-view-pane" class="view-pane">
-            <h3 id="protocol-view-title">Protokol: X-X-XX</h3>
-            <div class="print-actions">
-                <button class="btn-action" onclick="printCurrentDoc()">🖨️ Štampaj Protokolarni List</button>
-            </div>
-            <div id="protocolar-sheet-render" class="doc-preview-box">
-                <!-- Rendered Document in Courier New -->
-            </div>
-        </div>
-
-        <!-- PANE: DOKUMENTACIJA MODUL -->
-        <div id="dokumentacija-pane" class="view-pane">
-            <h3>Sistemski Modul: Dokumentacija</h3>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">Generisanje zakonski i korporativno usklađene dokumentacije. Izaberi tip dokumenta koji želiš da izdaš:</p>
-            
-            <div class="form-grid" style="margin-bottom: 30px;">
+        <!-- PANE: NEW PROTOCOL -->
+        <div id="new-protocol-pane" class="view-pane active-pane">
+            <h3>Kreiranje novog predmeta i protokola</h3>
+            <div style="background:#fff; padding:20px; border:1px solid var(--border-color); border-radius:4px; margin-top:15px;">
                 <div class="form-group">
-                    <label>Izaberi Protokol na koji se vezuje dokument</label>
-                    <select id="doc-protocol-select"></select>
+                    <label>Broj Protokola (npr. 1-5-26)</label>
+                    <input type="text" id="proto-id" placeholder="X-M-GG">
                 </div>
                 <div class="form-group">
-                    <label>Tip Dokumenta za generisanje</label>
-                    <select id="doc-type-select">
-                        <option value="ugovor">Ugovor o radu / Digitalnim uslugama</option>
-                        <option value="resenje-prestanak">Rešenje o privremenom prestanku rada</option>
-                        <option value="resenje-snimanje">Rešenje o hitnom snimanju video sadržaja</option>
-                        <option value="koncept-plan">Konceptualno vizualni plan i kadriranje</option>
-                        <option value="mesecni-izvestaj">Mesečni izveštaj o sprovođenju strategije</option>
+                    <label>Izaberi boju fascikle</label>
+                    <select id="proto-color">
+                        <option value="var(--folder-crvena)">Crvena</option>
+                        <option value="var(--folder-zuta)">Žuta</option>
+                        <option value="var(--folder-zelena)">Zelena</option>
+                        <option value="var(--folder-plava)">Plava</option>
                     </select>
                 </div>
-            </div>
-            <button class="btn-primary" onclick="generateDocument()">⚡ Generiši Kompletiran Sadržaj</button>
-
-            <div id="generated-doc-container" style="display: none; margin-top: 30px;">
-                <div class="print-actions">
-                    <button class="btn-action" onclick="printCurrentDoc()">🖨️ Pošalji na štampu (Pečat i Potpis)</button>
+                <div class="form-group">
+                    <label>Inicijalni Predmet / Naziv saradnje</label>
+                    <input type="text" id="proto-title" placeholder="Upiši naziv">
                 </div>
-                <div id="document-render-zone" class="doc-preview-box">
-                    <!-- Standardized Courier New content goes here -->
-                </div>
+                <button class="btn btn-blue" onclick="createProtocol()">Zavedi i otvori fasciklu</button>
             </div>
         </div>
 
+        <!-- PANE: PROTOCOL MANAGEMENT (THE CORE) -->
+        <div id="protocol-manage-pane" class="view-pane">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 id="manage-proto-title">Protokol</h3>
+                <div>
+                    <button class="btn" onclick="window.print()">🖨️ Odštampaj trenutni list</button>
+                    <button class="btn btn-danger" onclick="deleteCurrentProtocol()">Obriši ovaj protokol</button>
+                </div>
+            </div>
+
+            <!-- Uvoz Skeniranog Dokumenta -->
+            <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:4px; margin-bottom:20px;">
+                <label>📂 Uvezi slikan ili skeniran dokument u ovaj protokol:</label>
+                <input type="file" id="scan-uploader" accept="image/*" onchange="uploadScan(event)" style="margin-top:5px;">
+                <div id="scanned-zone" class="scanned-images-container"></div>
+            </div>
+
+            <!-- Dokument Generator i Editor -->
+            <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:4px;">
+                <h4>Konstruktor Dokumenta (Izaberi tip i kreiraj elemente)</h4>
+                
+                <div class="form-group" style="margin-top:10px;">
+                    <label>Tip Dokumenta:</label>
+                    <input type="text" id="document-type-input" placeholder="npr. Poziv za sednicu upravnog odbora / Ugovor o radu" style="font-weight:bold;">
+                </div>
+
+                <!-- Kontrole za dodavanje bilo čega -->
+                <div class="controls-row">
+                    <strong style="align-self:center; font-size:0.85rem;">DODAJ U DOKUMENT:</strong>
+                    <button class="btn" onclick="addCustomElement('text')">+ Običan Tekst</button>
+                    <button class="btn" onclick="addCustomElement('heading')">+ Podnaslov</button>
+                    <button class="btn" onclick="addCustomElement('dropdown')">+ Padajući Meni</button>
+                    <button class="btn" onclick="addCustomElement('stamp')">+ Polje Pečat/Potpis</button>
+                </div>
+
+                <!-- LIVE PREVIEW / PRINT SHEET -->
+                <div id="doc-to-print" class="doc-canvas">
+                    <!-- Fiksno obavezno Zaglavlje -->
+                    <div class="doc-system-header">
+                        <img src="profilna.png" alt="Logo">
+                        <div class="doc-header-info">
+                            <h2>Ognjen Filipović</h2>
+                            <p>Cybersecurity enthusiast & Tech Content Creator</p>
+                            <p>E-mail: ognjen.tech.contact@gmail.com | Tel: 0601979747</p>
+                        </div>
+                    </div>
+
+                    <!-- Dinamični Tip Dokumenta centriran -->
+                    <div style="text-align:center; margin-bottom:30px; font-weight:bold; font-size:1.2rem;" id="render-doc-type">
+                        [TIP DOKUMENTA]
+                    </div>
+
+                    <!-- Ovde se ubacuje sve što Ognjen klikne -->
+                    <div id="dynamic-elements-area"></div>
+                </div>
+
+                <button class="btn btn-blue" style="margin-top:15px;" onclick="saveDocumentLayout()">💾 Sačuvaj trenutni raspored elemenata</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // System State
-        let protocols = JSON.parse(localStorage.getItem('ognjen_protocols')) || {};
+        let db = JSON.parse(localStorage.getItem('ognjen_v2_db')) || {};
+        let activeProtocolId = null;
 
-        // Legal Clauzul constant used everywhere across system
-        const LEGAL_FOOTER = `Ovaj dokument je u skladu sa Zakonom o autorskom i srodnim pravima, Zakonom o zaštiti poslovne tajne, Zakonom o obligacionim odnosima, kao i važećim poresko-pravnim propisima koji uređuju oblast frilensinga, samo zapošljavanja i ugovorne saradnje fizičkih lica koja ostvaruju prihode od autorskih dela i digitalnih usluga u Republici Srbiji.
-
-Sve informacije, marketing strategije, planovi produkcije, kreativni koncepti za video sadržaje i estetske smernice iznete u ovom dokumentu predstavljaju poverljive podatke i poslovnu tajnu. Prijemom ovog materijala, klijent se obavezuje da će primeniti najviši stepen diskrecije. Strogo je zabranjeno svako neovlašćeno deljenje, kopiranje, distribucija ili ustupanje ovog dokumenta trećim licima bez prethodne pismene saglasnosti autora.
-
-Pošto se ova saradnja realizuje u okviru savremenih pravnih okvira za frilensere i nezavisne ugovarače u digitalnoj industriji, ovaj dokument služi i kao zvaničan prilog i specifikacija obavljenog posla ili planiranih usluga. Svako korišćenje ideja, struktura kampanje ili tehničkih rešenja prikazanih u ovom dokumentu izvan zvanično zaključenog i finansijski namirenog ugovornog odnosa smatraće se povredom autorskih prava i neovlašćenim prisvajanjem tuđeg rada, što podleže zakonskoj odgovornosti i nadoknadi štete.`;
-
-        // Run on Startup
         window.onload = function() {
-            renderProtocolsSidebar();
-            updateDashboardTable();
-            populateProtocolSelects();
-            
-            // Set clock
-            document.getElementById('system-clock').innerText = new Date().toLocaleString('sr-RS');
-            setInterval(() => {
-                document.getElementById('system-clock').innerText = new Date().toLocaleString('sr-RS');
-            }, 1000);
+            renderSidebar();
         };
 
-        function switchPane(paneId, title = "") {
+        function showPane(id) {
             document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active-pane'));
-            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-            
-            document.getElementById(paneId).classList.add('active-pane');
-            if (title) {
-                document.getElementById('current-view-title').innerText = title;
+            document.getElementById(id).classList.add('active-pane');
+        }
+
+        function createProtocol() {
+            let id = document.getElementById('proto-id').value.trim();
+            let color = document.getElementById('proto-color').value;
+            let title = document.getElementById('proto-title').value.trim();
+
+            if(!id || !title) {
+                alert('Unesi broj protokola i naziv!');
+                return;
             }
-        }
 
-        function openNewProtocolForm() {
-            document.getElementById('protocol-form').reset();
-            switchPane('new-protocol-pane', 'Otvaranje Protokola');
-        }
-
-        function togglePrethodnaInput(val) {
-            const field = document.getElementById('prethodna-doc-field');
-            field.style.display = (val === '+') ? 'block' : 'none';
-        }
-
-        function togglePrethodnaDoc(val) {
-            // Placeholder logic if needed for dropdown behaviors
-        }
-
-        // Save Form Data to LocalStorage
-        function saveProtocol(e) {
-            e.preventDefault();
-            const id = document.getElementById('p-id').value.trim();
-            
-            const protocolData = {
+            db[id] = {
                 id: id,
-                datetime: document.getElementById('p-datetime').value,
-                predmet: document.getElementById('p-predmet').value,
-                brend: document.getElementById('p-brend').value,
-                prethodnaStatus: document.getElementById('p-prethodna-status').value,
-                prethodnaText: document.getElementById('p-prethodna-text').value || 'Nema',
-                kontakt: document.getElementById('p-kontakt').value || 'Nije navedeno',
-                brojVidea: document.getElementById('p-broj-videa').value || '0',
-                prihod: document.getElementById('p-prihod').value || '0',
-                detalji: document.getElementById('p-detalji').value || '/',
-                napomene: document.getElementById('p-napomene').value || '/'
+                color: color,
+                title: title,
+                docType: "ZAPISNIK / DOKUMENT",
+                scans: [],
+                elements: []
             };
 
-            protocols[id] = protocolData;
-            localStorage.setItem('ognjen_protocols', JSON.stringify(protocols));
-            
-            renderProtocolsSidebar();
-            updateDashboardTable();
-            populateProtocolSelects();
-            viewProtocol(id);
+            saveToStorage();
+            renderSidebar();
+            openProtocol(id);
         }
 
-        function renderProtocolsSidebar() {
-            const container = document.getElementById('protocols-list');
-            container.innerHTML = '';
-            Object.keys(protocols).forEach(id => {
-                const btn = document.createElement('button');
-                btn.className = 'menu-item protocol-btn';
-                btn.innerText = `📂 Protokol ${id}`;
-                btn.onclick = () => viewProtocol(id);
-                container.appendChild(btn);
+        function renderSidebar() {
+            let list = document.getElementById('sidebar-protocols-list');
+            list.innerHTML = '';
+            Object.values(db).forEach(p => {
+                let div = document.createElement('div');
+                div.className = 'protocol-item';
+                div.onclick = () => openProtocol(p.id);
+                
+                let dot = document.createElement('div');
+                dot.className = 'folder-dot';
+                dot.style.backgroundColor = p.color;
+
+                div.appendChild(dot);
+                div.appendChild(document.createTextNode(`Prot. ${p.id} - ${p.title}`));
+                list.appendChild(div);
             });
         }
 
-        function updateDashboardTable() {
-            const tbody = document.getElementById('dashboard-table-body');
-            tbody.innerHTML = '';
+        function openProtocol(id) {
+            activeProtocolId = id;
+            let p = db[id];
             
-            if (Object.keys(protocols).length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Nema registrovanih protokola u bazi podataka.</td></tr>`;
-                return;
+            document.getElementById('manage-proto-title').innerText = `Fascikla Protokola: ${p.id} (${p.title})`;
+            document.getElementById('document-type-input').value = p.docType || "";
+            document.getElementById('render-doc-type').innerText = p.docType ? p.docType.toUpperCase() : "[UPIŠI TIP DOKUMENTA]";
+
+            // Isprati promene tipa dokumenta uživo
+            document.getElementById('document-type-input').oninput = function() {
+                document.getElementById('render-doc-type').innerText = this.value.toUpperCase();
+            };
+
+            // Učitaj skenirane dokumente
+            renderScans(p.scans);
+
+            // Učitaj elemente konstrukcije
+            let area = document.getElementById('dynamic-elements-area');
+            area.innerHTML = '';
+            if(p.elements && p.elements.length > 0) {
+                p.elements.forEach(el => {
+                    recreateSavedElement(el.type, el.value, el.options);
+                });
             }
 
-            Object.values(protocols).forEach(p => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-family:var(--font-doc); font-weight:bold; color:var(--accent-color);">${p.id}</td>
-                        <td>${p.predmet.toUpperCase()}</td>
-                        <td>${p.brend}</td>
-                        <td>${p.kontakt}</td>
-                        <td>${p.prihod}</td>
-                    </tr>
+            showPane('protocol-manage-pane');
+        }
+
+        // Dinamičko dodavanje elemenata na zahtev
+        function addCustomElement(type) {
+            recreateSavedElement(type, '', '');
+        }
+
+        function recreateSavedElement(type, savedValue, savedOptions) {
+            let area = document.getElementById('dynamic-elements-area');
+            let wrapper = document.createElement('div');
+            wrapper.className = 'dynamic-element';
+            wrapper.setAttribute('data-type', type);
+
+            if (type === 'text') {
+                let textarea = document.createElement('textarea');
+                textarea.style.width = "100%";
+                textarea.style.fontFamily = "Courier New";
+                textarea.rows = 4;
+                textarea.placeholder = "Ovde slobodno kucaj tekst dokumenta...";
+                textarea.value = savedValue;
+                wrapper.appendChild(textarea);
+            } 
+            else if (type === 'heading') {
+                let input = document.createElement('input');
+                input.style.width = "100%";
+                input.style.fontWeight = "bold";
+                input.style.fontFamily = "Courier New";
+                input.placeholder = "PODNASLOV / GLAVA (npr. DNEVNI RED:)";
+                input.value = savedValue;
+                wrapper.appendChild(input);
+            } 
+            else if (type === 'dropdown') {
+                let select = document.createElement('select');
+                select.style.fontFamily = "Courier New";
+                
+                // Generisanje opcija (Možeš dodati i druge stvari koje ti trebaju)
+                let ops = savedOptions ? savedOptions : ["Izaberi opciju", "Saradnja", "Freelancing", "Hitno snimanje", "Usvojeno", "Odbijeno"];
+                ops.forEach(o => {
+                    let opt = document.createElement('option');
+                    opt.value = o;
+                    opt.innerText = o;
+                    if(o === savedValue) opt.selected = true;
+                    select.appendChild(opt);
+                });
+                wrapper.appendChild(select);
+            } 
+            else if (type === 'stamp') {
+                let flex = document.createElement('div');
+                flex.style.display = "flex";
+                flex.style.justifyContent = "space-between";
+                flex.style.marginTop = "30px";
+                flex.innerHTML = `
+                    <div class="stamp-box">M.P. SYSTEM BOX<br>KVADRAT PEČATA</div>
+                    <div style="text-align:right; align-self: flex-end;">
+                        <p>POTPIS ODGOVORNOG LICA:</p>
+                        <br>
+                        <p>___________________________</p>
+                    </div>
                 `;
-            });
-        }
-
-        function populateProtocolSelects() {
-            const select = document.getElementById('doc-protocol-select');
-            select.innerHTML = '';
-            Object.keys(protocols).forEach(id => {
-                select.innerHTML += `<option value="${id}">Protokol ${id}</option>`;
-            });
-        }
-
-        // View Specific Protocol Document Sheet
-        function viewProtocol(id) {
-            const p = protocols[id];
-            if (!p) return;
-
-            switchPane('protocol-view-pane', `Pregled Modula: Protokol ${id}`);
-            
-            const formattedDate = new Date(p.datetime).toLocaleString('sr-RS');
-
-            const renderZone = document.getElementById('protocolar-sheet-render');
-            renderZone.innerHTML = `
-=====================================================================
-CENTRALNI ODBOR ZA TECH KAMPANJE           // OGNJEN.TECH
-KLASA DOKUMENTA: PROTOKOLARNI_LIST_${p.id.replace(/-/g, '')}
-STATUS: ZAVEDEN PROTOKOL
-=====================================================================
-
-                       P R O T O K O L A R N I   L I S T
-                       Za Protokol Broj: ${p.id}
-
-*********************************************************************
-VREME OTVARANJA: ${formattedDate} časova
-PREDMET SARADNJE: ${p.predmet.toUpperCase()}
-BREND / KVARTAL: ${p.brend}
-*********************************************************************
-
-[1] STATUS PRETHODNE DOKUMENTACIJE: [ ${p.prethodnaStatus} ]
-    Podaci o pratećim aktima: ${p.prethodnaText}
-
-[2] DETALJI I KONCEPTUALNI REZULTAT SARADNJE:
----------------------------------------------------------------------
-${p.detalji}
-
-[3] OPERATIVNI PARAMETRI:
----------------------------------------------------------------------
-* Planirani broj video sadržaja: ${p.brojVidea}
-* Kontakt odgovorno lice partnera: ${p.kontakt}
-* Projektovana finansijska isplativost / Prihod: ${p.prihod}
-
-[4] SVE SISTEMSKE NAPOMENE I DODATNI PODACI:
----------------------------------------------------------------------
-${p.napomene}
-
----------------------------------------------------------------------
-NAPOMENA: Ovaj list čini sastavni deo korice predmeta za protokol ${p.id}.
-Svi materijali moraju biti fizički štampani i odloženi u arhivu hq.
----------------------------------------------------------------------
-
-${LEGAL_FOOTER}
-
-
-M.P. SYSTEM BOX                     POTPIS STRATEŠKOG KREATORA:
-+---------------+
-|               |                   Filipović Ognjen
-|    KVADRAT    |                   
-|    PEČATA     |                   ___________________________
-|               |
-+---------------+                   Datuma: ___________________ U Aranđelovcu
-            `;
-        }
-
-        // Document Generation Module Business Logic
-        function generateDocument() {
-            const protoId = document.getElementById('doc-protocol-select').value;
-            const docType = document.getElementById('doc-type-select').value;
-            
-            if (!protoId) {
-                alert('Molimo vas da prvo kreirate protokol u sistemu kako biste ga vezali za dokumentaciju.');
-                return;
+                wrapper.appendChild(flex);
             }
 
-            const p = protocols[protoId];
-            const renderZone = document.getElementById('document-render-zone');
-            const container = document.getElementById('generated-doc-container');
+            // Dugme za brisanje pojedinačnog elementa sa liste
+            let delBtn = document.createElement('button');
+            delBtn.innerText = "Ukloni stavku";
+            delBtn.className = "btn btn-danger";
+            delBtn.style.fontSize = "0.7rem";
+            delBtn.style.padding = "2px 5px";
+            delBtn.style.marginTop = "5px";
+            delBtn.style.display = "block";
+            delBtn.onclick = function() { wrapper.remove(); };
             
-            let docTitle = "";
-            let bodyText = "";
+            // Sakrij dugme za brisanje tokom štampe
+            delBtn.setAttribute('style', 'margin-top:5px; font-size:0.7rem; padding:2px 5px;');
+            delBtn.classList.add('print-hide');
+            
+            // Dodavanje stila za skrivanje u štampi
+            let style = document.createElement('style');
+            style.innerHTML = "@media print { .print-hide { display: none !important; } }";
+            document.head.appendChild(style);
+            delBtn.classList.add('print-hide');
 
-            const currentLocalDate = new Date().toLocaleDateString('sr-RS');
-
-            if (docType === 'ugovor') {
-                docTitle = `UGOVOR O POSLOVNO-TEHNIČKOJ SARADNJI`;
-                bodyText = `Na osnovu Protokola broj ${p.id}, zaključuje se ovaj ugovor između:
-1. Ognjen Filipović, Lead Tech Creator ispred platforme Ognjen Tech (u daljem tekstu: Izvršilac)
-2. ${p.kontakt} ispred brenda/partnera ${p.brend} (u daljem tekstu: Naručilac)
-
-Član 1.
-Predmet ovog ugovora je realizacija ${p.brojVidea} namenskih video materijala u skladu sa Dark Tech estetikom i definisanim parametrima kampanje.
-
-Član 2.
-Naručilac se obavezuje da za izvršene usluge isplati ugovoreni prihod u iznosu od: ${p.prihod}.
-
-Član 3.
-Sva autorska prava na video materijale, modifikacije hardvera i kreativni koncept ostaju u trajnom vlasništvu platforme Ognjen Tech.`;
-            } 
-            else if (docType === 'resenje-prestanak') {
-                docTitle = `REŠENJE O PRIVREMENOM PRESTANKU RADA`;
-                bodyText = `U skladu sa internim pravilnikom platforme Ognjen Tech i analizom rizika za kvartal ${p.brend}, donosi se sledeće zvanično rešenje:
-
-1. Određuje se PRIVREMENI PRESTANAK operativnog rada na video produkciji po Protokolu broj ${p.id}.
-2. Prestanak rada se uvodi radi optimizacije tehničkih sistema, rekonstrukcije radnog prostora ili usklađivanja marketinških tokova.
-3. Za vreme trajanja ovog rešenja vrši se kompletna procena rizika sledećih faza projekta.
-4. Svako odstupanje od planiranih kvantitetnih KPI normi regulisano je direktno ovim pravnim aktom.`;
-            } 
-            else if (docType === 'resenje-snimanje') {
-                docTitle = `REŠENJE O HITNOM SNIMANJU VIDEO SADRŽAJA`;
-                bodyText = `U cilju održavanja maksimalnog Engagement-a publike i iskorišćenja viralnog potencijala za protokol ${p.id}, I Z D A J E M O sledeće rešenje:
-
-1. Nalaže se HITNO pokretanje produkcije i snimanja video materijala za brend/projekat ${p.brend}.
-2. Produkcija se mora pridržavati postavljenih standarda: Center-weighted kompozicija u visini očiju, RGB trake podešene na plavu/ljubičastu boju i mračna pozadina ekrana sa kodom.
-3. Kvantitet video materijala mora ostati u okviru definisanih KPI koeficijenata.`;
-            } 
-            else if (docType === 'koncept-plan') {
-                docTitle = `KONCEPTUALNO VIZUALNI PLAN I KADRIRANJE`;
-                bodyText = `STRATEŠKI PLAN PRODUKCIJE ZA PROTOKOL: ${p.id}
-
-I. VIZUELNI PLAN I EDITING STANDARD
-- Dinamičan i brz ritam reza (Hard Cut) na svake 2-3 sekunde.
-- Upotreba makro kadriranja (B-Roll) za prikazivanje detalja, teksture komponenti i prekidača.
-
-II. STRUKTURA SCENARIJA (HOOK & CTA)
-* Udica: Koristiti selektovane hook materijale (npr. Zvuk tastature, skrivene temperature hardvera).
-* Poziv na akciju: Integracija pitanja za publiku u cilju podizanja analitike (AMD vs Intel / Mehanička vs Membranska).
-
-III. PLAN DISTRIBUCIJE
-Video kratkog formata se simultano plasira na primarne kanale: TikTok, Instagram i YouTube Shorts.`;
-            } 
-            else if (docType === 'mesecni-izvestaj') {
-                docTitle = `MESEČNI IZVEŠTAJ O SPROVOĐENJU STRATEGIJE`;
-                bodyText = `IZVEŠTAJ ZA PROTOKOL: ${p.id} (Kvartal: ${p.brend})
-
-Ovim izveštajem se tabelarno i analitički sumiraju postignuti rezultati u proteklom vremenskom periodu.
-
-1. EVALUACIJA KPI VREDNOSTI:
-   * Broj planiranih videa: ${p.brojVidea}
-   * Ostvareni primarni dohvat (Reach) i stabilnost primarne baze pratilaca.
-   
-2. FINANSIJSKI BILANS:
-   * Evidentiran prihod unutar sistema: ${p.prihod}
-
-3. ZAKLJUČAK:
-   Strategija i realizacija se uspešno implementiraju. Najveći marketinški fokus se zadržava na platformi sa dokazano najvišim viralnim performansom.`;
-            }
-
-            // Render into Document Frame
-            renderZone.innerHTML = `
-=====================================================================
-OGNJEN TECH SISTEM - KANCELARIJA KREATORA
-ZAVEDEN DOKUMENT ZA PROTOKOL: ${p.id}
-DATUM IZDAVANJA: ${currentLocalDate} godine
-=====================================================================
-
-\n\n
-                     ${docTitle}
-\n
----------------------------------------------------------------------
-\n
-${bodyText}
-
-\n\n
----------------------------------------------------------------------
-PRAVNE ODREDBE I ZAŠTITA PODATAKA:
-\n
-${LEGAL_FOOTER}
-
-\n\n\n
-M.P. SYSTEM BOX                     POTPISI ODGOVORNIH LICA:
-+---------------+
-|               |                   Strategiju sastavio: Filipović Ognjen
-|    KVADRAT    |                   
-|    PEČATA     |                   Strategiju sproveo: Ognjen Filipović
-|               |
-+---------------+                   Strateški consultant: Dorotea Santovac
-
-\n
-Mesto izdavanja: Aranđelovac, Bukovik.
-            `;
-
-            container.style.display = 'block';
-            renderZone.scrollIntoView({ behavior: 'smooth' });
+            wrapper.appendChild(delBtn);
+            area.appendChild(wrapper);
         }
 
-        function printCurrentDoc() {
-            window.print();
+        // Čuvanje trenutnog stanja elemenata u memoriju browsera
+        function saveDocumentLayout() {
+            if(!activeProtocolId) return;
+            
+            let p = db[activeProtocolId];
+            p.docType = document.getElementById('document-type-input').value;
+            p.elements = [];
+
+            let elements = document.getElementById('dynamic-elements-area').children;
+            for(let el of elements) {
+                let type = el.getAttribute('data-type');
+                let value = "";
+                let options = [];
+
+                if(type === 'text') {
+                    value = el.querySelector('textarea').value;
+                } else if(type === 'heading') {
+                    value = el.querySelector('input').value;
+                } else if(type === 'dropdown') {
+                    value = el.querySelector('select').value;
+                    el.querySelectorAll('select option').forEach(o => options.push(o.value));
+                }
+
+                p.elements.push({ type: type, value: value, options: options });
+            }
+
+            saveToStorage();
+            alert('Struktura dokumenta je besprekorno sačuvana u memoriji protokola!');
+        }
+
+        // Rad sa skeniranim/slikanim dokumentima (Base64 uvoz)
+        function uploadScan(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                if(!activeProtocolId) return;
+                db[activeProtocolId].scans.push(e.target.result);
+                saveToStorage();
+                renderScans(db[activeProtocolId].scans);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderScans(scansList) {
+            let container = document.getElementById('scanned-zone');
+            container.innerHTML = '';
+            if(scansList && scansList.length > 0) {
+                scansList.forEach((imgData, index) => {
+                    let div = document.createElement('div');
+                    div.style.position = "relative";
+                    div.style.display = "inline-block";
+                    div.style.marginRight = "10px";
+
+                    let img = document.createElement('img');
+                    img.src = imgData;
+                    img.style.height = "15px"; // Mini sličica u kontrolnoj tabli
+                    img.style.cursor = "pointer";
+                    img.title = "Klikni da otvoriš veliku sliku";
+                    img.onclick = () => {
+                        let win = window.open();
+                        win.document.write(`<img src="${imgData}" style="max-width:100%;">`);
+                    };
+
+                    let del = document.createElement('button');
+                    del.innerText = "X";
+                    del.style.position = "absolute";
+                    del.style.top = "0";
+                    del.style.right = "0";
+                    del.style.background = "red";
+                    del.style.color = "white";
+                    del.onclick = () => {
+                        db[activeProtocolId].scans.splice(index, 1);
+                        saveToStorage();
+                        renderScans(db[activeProtocolId].scans);
+                    };
+
+                    div.appendChild(img);
+                    div.appendChild(del);
+                    container.appendChild(div);
+                });
+            }
+        }
+
+        function deleteCurrentProtocol() {
+            if(confirm('Da li ste sigurni da želite da obrišete ovaj protokol i sve njegove dokumente?')) {
+                delete db[activeProtocolId];
+                saveToStorage();
+                renderSidebar();
+                showPane('new-protocol-pane');
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('ognjen_v2_db', JSON.stringify(db));
         }
     </script>
 </body>
