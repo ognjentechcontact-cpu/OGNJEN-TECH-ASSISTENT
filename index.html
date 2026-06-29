@@ -3,176 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ognjen Tech Assistant - Arhivski & Video Sistem v7.1</title>
+    <title>Ognjen Tech Assistant - Enterprise Archival System v9.0</title>
     <style>
         :root {
-            --bg-main: #f4f6f9;
-            --bg-sidebar: #ffffff;
-            --border-color: #b0bec5;
-            --text-main: #1a1a1a;
-            --text-muted: #546e7a;
-            --accent-blue: #0d47a1;
-            --folder-crvena: #d32f2f;
-            --folder-zuta: #fbc02d;
-            --folder-zelena: #388e3c;
-            --folder-plava: #1976d2;
-            --accent-purple: #4a148c;
+            /* Stealth / Dark Tech Paleta */
+            --bg-main: #0a0f1d;
+            --bg-sidebar: #111827;
+            --bg-card: #1f2937;
+            --border-color: #374151;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --accent-blue: #2563eb;
+            --accent-purple: #7c3aed;
+            --folder-crvena: #dc2626;
+            --folder-zuta: #d97706;
+            --folder-zelena: #059669;
+            --folder-plava: #2563eb;
+            
+            /* Print Specifične Boje */
+            --print-bg: #ffffff;
+            --print-text: #000000;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Sidebar */
+        /* Sidebar - Profesionalni Dark Izgled */
         #sidebar {
             width: 320px;
             background-color: var(--bg-sidebar);
-            border-right: 2px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             height: 100%;
         }
         .sidebar-header {
-            padding: 20px;
-            border-bottom: 2px solid var(--border-color);
+            padding: 25px 20px;
+            border-bottom: 1px solid var(--border-color);
             text-align: center;
-            background: #eceff1;
+            background: #151f32;
         }
         .sidebar-header img {
-            width: 75px;
-            height: 75px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--border-color);
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
         }
-        .menu-section { padding: 15px; flex: 1; overflow-y: auto; }
-        .section-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: bold; margin-bottom: 10px; letter-spacing: 0.5px; margin-top: 15px; }
+        .menu-section { padding: 20px; flex: 1; overflow-y: auto; }
+        .section-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 12px; letter-spacing: 1px; margin-top: 20px; }
         
         .protocol-item {
             display: flex;
             align-items: center;
             padding: 12px;
             border: 1px solid var(--border-color);
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 6px;
             cursor: pointer;
             margin-bottom: 8px;
-            font-weight: bold;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
-        .protocol-item:hover { background: #eceff1; }
-        .folder-box { width: 20px; height: 20px; border-radius: 4px; margin-right: 12px; border: 1px solid rgba(0,0,0,0.3); }
+        .protocol-item:hover { border-color: var(--accent-purple); background: #263346; }
+        .folder-box { width: 16px; height: 16px; border-radius: 4px; margin-right: 12px; border: 1px solid rgba(255,255,255,0.2); }
 
         .doc-link-item {
-            padding: 10px;
-            background: #f8f9fa;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.03);
             border: 1px solid var(--border-color);
-            margin-bottom: 5px;
-            border-radius: 4px;
+            margin-bottom: 6px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
         }
-        .doc-link-item:hover { background: #e2e6ea; }
+        .doc-link-item:hover { background: rgba(255,255,255,0.08); border-color: var(--accent-blue); }
 
-        /* Main Content */
+        /* Main Kontent */
         #main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         header {
-            height: 65px;
-            background: #fff;
-            border-bottom: 2px solid var(--border-color);
+            height: 70px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 25px;
+            padding: 0 30px;
         }
-        .view-pane { flex: 1; padding: 25px; overflow-y: auto; display: none; }
+        .view-pane { flex: 1; padding: 30px; overflow-y: auto; display: none; }
         .view-pane.active-pane { display: block; }
 
-        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
-        label { font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; color: #333; }
-        input[type="text"], input[type="number"], select, textarea { padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 1rem; }
+        /* Forme / Inputi */
+        .form-group { margin-bottom: 18px; display: flex; flex-direction: column; }
+        label { font-weight: 600; font-size: 0.85rem; margin-bottom: 6px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea { 
+            padding: 12px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 6px; font-size: 1rem; color: var(--text-main); outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-purple); }
         
+        /* Dugmad */
+        .btn { padding: 12px 20px; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-weight: 600; background: var(--bg-card); color: var(--text-main); transition: all 0.2s; }
+        .btn:hover { background: rgba(255,255,255,0.05); }
+        .btn-blue { background: var(--accent-blue); color: #fff; border: none; }
+        .btn-blue:hover { background: #1d4ed8; }
+        .btn-green { background: var(--folder-zelena); color: #fff; border: none; }
+        .btn-green:hover { background: #047857; }
+        .btn-danger { background: var(--folder-crvena); color: #fff; border: none; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-purple { background: var(--accent-purple); color: #fff; border: none; }
+        .btn-purple:hover { background: #6d28d9; }
+
+        /* Gateway prozor za pristup protokolu */
+        .gateway-container {
+            background: #111c30; border: 2px solid var(--accent-purple); border-radius: 8px; padding: 30px; max-width: 600px; margin: 40px auto;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
+        }
+
         /* Video Modul Koraci */
-        .step-container { display: none; background: #fff; padding: 20px; border: 1px solid var(--border-color); border-radius: 6px; margin-top: 15px; }
+        .step-container { display: none; background: var(--bg-card); padding: 25px; border: 1px solid var(--border-color); border-radius: 8px; margin-top: 15px; }
         .step-container.active-step { display: block; }
         .step-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-        .step-tab { flex: 1; padding: 10px; background: #e0e0e0; text-align: center; font-weight: bold; border-radius: 4px; font-size: 0.9rem; }
+        .step-tab { flex: 1; padding: 12px; background: var(--bg-card); text-align: center; font-weight: bold; border-radius: 6px; font-size: 0.9rem; color: var(--text-muted); }
         .step-tab.active-tab { background: var(--accent-purple); color: #fff; }
 
-        /* Dinamička polja unutar dokumenta */
+        /* Dinamička polja dokumenta */
         .interactive-row { margin-bottom: 20px; display: flex; flex-direction: column; }
         .interactive-row label { font-family: 'Courier New', monospace; font-size: 1rem; color: #000; font-weight: bold; margin-bottom: 5px; }
         .interactive-row input, .interactive-row textarea, .interactive-row select {
             width: 100%; padding: 10px; font-family: 'Courier New', monospace; font-size: 1.1rem; border: 1px dashed #444; background: #fff; color: #000;
         }
 
-        .btn { padding: 10px 18px; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; font-weight: bold; background: #fff; }
-        .btn-blue { background: var(--accent-blue); color: #fff; border: none; }
-        .btn-green { background: #388e3c; color: #fff; border: none; }
-        .btn-danger { background: #d32f2f; color: #fff; border: none; }
-        .btn-purple { background: var(--accent-purple); color: #fff; border: none; }
-
-        /* Kanvas za dokumente */
+        /* Kanvas za štampu (Beli papir) */
         .doc-canvas {
-            background: #fff; color: #000; padding: 50px; border: 2px solid #000; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 25px;
+            background: var(--print-bg); color: var(--print-text); padding: 50px; border: 2px solid #000; box-shadow: 0 4px 20px rgba(0,0,0,0.5); margin-top: 25px;
             width: 100%; max-width: 800px; min-height: 1000px; position: relative;
         }
-        
-        .half-page {
-            min-height: 520px !important;
-            max-height: 520px !important;
-            overflow: hidden;
-            border-bottom: 3px dashed #000 !important;
-        }
+        .half-page { min-height: 520px !important; max-height: 520px !important; overflow: hidden; border-bottom: 3px dashed #000 !important; }
 
-        .doc-system-header { display: flex; align-items: center; border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 25px; }
+        .doc-system-header { display: flex; align-items: center; border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 25px; color: var(--print-text); }
         .doc-system-header img { width: 75px; height: 75px; margin-right: 25px; border: 1px solid #000; }
         .doc-header-info h2 { font-size: 1.5rem; font-weight: bold; }
         .doc-header-info p { font-size: 0.9rem; margin-top: 2px; }
 
         .stamp-box {
             border: 2px solid #000; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; text-align: center; font-weight: bold; font-family: 'Courier New', monospace;
+            font-size: 0.75rem; text-align: center; font-weight: bold; font-family: 'Courier New', monospace; color: #000;
         }
 
         .color-picker-container { display: flex; gap: 15px; margin-top: 5px; }
-        .color-square { width: 40px; height: 40px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
-        .color-square.selected { border-color: #000; transform: scale(1.05); }
-        .scanned-images-container img { max-width: 130px; margin-top: 10px; border: 1px solid var(--border-color); }
+        .color-square { width: 35px; height: 35px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; }
+        .color-square.selected { border-color: #fff; transform: scale(1.05); }
+        .scanned-images-container img { max-width: 130px; margin-top: 10px; border: 1px solid var(--border-color); border-radius: 4px; }
 
-        /* Video List Kartice */
-        .video-card { background: #fff; border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; margin-bottom: 10px; cursor: pointer; }
+        .video-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s; }
         .video-card:hover { border-color: var(--accent-purple); }
 
         @media print {
             body * { visibility: hidden; }
             #print-zone, #print-zone * { visibility: visible; }
             #print-zone { position: absolute; left: 0; top: 0; width: 100%; }
-            .doc-canvas { border: 2px solid #000 !important; box-shadow: none !important; margin: 0 !important; padding: 40px !important; width: 100% !important; }
-            .half-page { 
-                height: 140mm !important; min-height: 140mm !important; max-height: 140mm !important;
-                border-bottom: 2px dashed #000 !important; page-break-inside: avoid;
-            }
-            .print-text-line { display: block; border-bottom: 1px solid #000; min-height: 25px; font-family: 'Courier New', monospace; font-size: 1.1rem; padding-bottom: 2px; white-space: pre-wrap; }
+            .doc-canvas { border: 2px solid #000 !important; box-shadow: none !important; margin: 0 !important; padding: 40px !important; width: 100% !important; background: #fff !important; color: #000 !important; }
+            .half-page { height: 140mm !important; min-height: 140mm !important; max-height: 140mm !important; border-bottom: 2px dashed #000 !important; page-break-inside: avoid; }
+            .print-text-line { display: block; border-bottom: 1px solid #000; min-height: 25px; font-family: 'Courier New', monospace; font-size: 1.1rem; padding-bottom: 2px; white-space: pre-wrap; color: #000; }
             .print-hide { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
     <div id="sidebar">
         <div class="sidebar-header">
             <img src="profilna.png" alt="Ognjen Tech Logo">
-            <h3 style="margin-top: 8px; font-size: 1.1rem;">Arhivski Centar v7.1</h3>
+            <h3 style="margin-top: 10px; font-size: 1.1rem; letter-spacing: 0.5px;">SYSTEM ARCHIVE v9.0</h3>
         </div>
         <div class="menu-section">
-            <button class="btn btn-blue" style="width:100%; margin-bottom:8px;" onclick="showPane('new-protocol-pane')">📁 Novi Protokol</button>
+            <button class="btn btn-blue" style="width:100%; margin-bottom:8px;" onclick="showPane('new-protocol-pane')">📁 Pokreni Novi Protokol</button>
             <button class="btn btn-purple" style="width:100%; margin-bottom:15px;" onclick="openVideoProductionPane()">🎬 Video Produkcija</button>
             
             <div class="section-title">Zavedeni Protokoli</div>
@@ -180,19 +196,44 @@
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div id="main-content">
         <header>
-            <h2>Ognjen Tech Assistant</h2>
-            <div style="font-weight: bold; color: var(--text-muted); font-size: 0.9rem;">Sve stare datoteke i moduli su aktivni</div>
+            <h2 style="font-size: 1.3rem; letter-spacing: 0.5px;">Ognjen Tech Control Hub</h2>
+            <div style="font-weight: 600; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Secure Database Connection Active</div>
         </header>
 
-        <!-- PANE: NEW PROTOCOL -->
-        <div id="new-protocol-pane" class="view-pane active-pane">
-            <h3>Pokretanje novog protokola (Proširena polja unosa)</h3>
-            <div style="background:#fff; padding:25px; border:1px solid var(--border-color); border-radius:6px; margin-top:15px;">
+        <div id="protocol-gateway-pane" class="view-pane">
+            <div class="gateway-container">
+                <h3 style="color: #fff; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--accent-purple); padding-bottom: 8px;">🔐 Bezbednosna Procedura Pristupa</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Upozorenje: Ulazak u ovaj arhivski protokol zahteva validan administrativni osnov.</p>
+                
+                <input type="hidden" id="gateway-target-proto-id">
+                
                 <div class="form-group">
-                    <label>Izaberi boju fascikle:</label>
+                    <label>Službeni / Pravni osnov za pristup predmetu:</label>
+                    <input type="text" id="gateway-osnov" placeholder="npr. Član 4. Zakona o zaštiti podataka / Revizija ugovora">
+                </div>
+                
+                <div class="form-group">
+                    <label>Konkretan razlog ulaska u bazu podataka:</label>
+                    <textarea id="gateway-razlog" rows="3" placeholder="Unesite obrazloženje zašto pristupate ovoj dokumentaciji u ovom trenutku..."></textarea>
+                </div>
+                
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button class="btn" style="flex:1;" onclick="showPane('new-protocol-pane')">Otkaži</button>
+                    <button class="btn btn-purple" style="flex:2;" onclick="authorizeAndOpenProtocol()">Odobri Pristup i Loguj Ulazak</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="new-protocol-pane" class="view-pane active-pane">
+            <h3 style="margin-bottom: 5px;">Pokretanje Nove Procedure i Protokola</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Prvo zavođenje predmeta u sistemsku arhivu.</p>
+            
+            <div style="background: var(--bg-card); padding: 25px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <div class="section-title" style="margin-top:0; margin-bottom:15px; color: var(--accent-blue);">I. Osnovna Klasifikacija</div>
+                <div class="form-group">
+                    <label>Identifikator Boje Fascikle:</label>
                     <div class="color-picker-container">
                         <div class="color-square selected" style="background-color: var(--folder-crvena);" onclick="selectColorSquare(this, 'var(--folder-crvena)')"></div>
                         <div class="color-square" style="background-color: var(--folder-zuta);" onclick="selectColorSquare(this, 'var(--folder-zuta)')"></div>
@@ -200,23 +241,25 @@
                         <div class="color-square" style="background-color: var(--folder-plava);" onclick="selectColorSquare(this, 'var(--folder-plava)')"></div>
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
-                        <label>Broj Protokola (npr. 22-06-2026)</label>
-                        <input type="text" id="proto-id" placeholder="Broj oznake">
+                        <label>Broj Protokola (Oznaka)</label>
+                        <input type="text" id="proto-id" placeholder="npr. 29-06-2026">
                     </div>
                     <div class="form-group">
-                        <label>Naziv predmeta / Arhive</label>
-                        <input type="text" id="proto-title" placeholder="Upiši opšti naziv">
+                        <label>Naziv Predmeta / Arhive</label>
+                        <input type="text" id="proto-title" placeholder="Upiši naziv predmeta">
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
-                        <label>Ime partnera / Kompanije / Brenda</label>
-                        <input type="text" id="proto-partner" placeholder="Npr. Redragon, Aula, Gigatron...">
+                        <label>Partner / Kompanija / Brend</label>
+                        <input type="text" id="proto-partner" placeholder="Npr. Aula, Lamzu, ComputerLand...">
                     </div>
                     <div class="form-group">
-                        <label>Tip saradnje / Klasifikacija</label>
+                        <label>Tip Saradnje / Klasifikacija</label>
                         <select id="proto-type">
                             <option value="B2B Marketing i promocija">B2B Marketing i promocija</option>
                             <option value="Kompenzacija hardverske opreme">Kompenzacija hardverske opreme</option>
@@ -225,52 +268,52 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label>Interna napomena / Kratak opis predmeta</label>
-                    <textarea id="proto-note" rows="2" placeholder="Unesi detalje važne za arhiviranje..."></textarea>
+                    <label>Inicijalni opis predmeta pri otvaranju:</label>
+                    <textarea id="proto-proc-razlog" rows="3" placeholder="Inicijalne beleške o predmetu..."></textarea>
                 </div>
-                <button class="btn btn-blue" onclick="createProtocol()">Zavedi protokol</button>
+
+                <button class="btn btn-purple" style="width: 100%; margin-top: 10px;" onclick="createProtocol()">Zavedi i Otvori Novi Predmet</button>
             </div>
         </div>
 
-        <!-- PANE: PROTOCOL MANAGEMENT -->
         <div id="protocol-manage-pane" class="view-pane">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
-                <h3 id="manage-proto-title">Protokol</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+                <h3 id="manage-proto-title" style="font-size: 1.4rem;">Protokol</h3>
                 <div style="display:flex; gap:10px;">
-                    <button class="btn btn-green" onclick="printWholeProtocolSheet()">🖨️ Odštampaj Protokolarni List</button>
-                    <button class="btn btn-danger" onclick="deleteCurrentProtocol()">Obriši protokol</button>
+                    <button class="btn btn-green" onclick="printWholeProtocolSheet()">🖨️ Odštampaj Protokolarni List + LOGOVE</button>
+                    <button class="btn btn-danger" onclick="deleteCurrentProtocol()">Obriši Protokol</button>
                 </div>
             </div>
 
-            <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:6px; margin-bottom:20px;">
-                <h4>Zavedeni listovi i dokumenti u ovom predmetu:</h4>
-                <div id="protocol-docs-list" style="margin-top: 10px; margin-bottom: 15px;"></div>
+            <div style="background: var(--bg-card); padding: 20px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="margin-bottom: 12px; font-size: 1rem;">Struktura Dokumenata unutar Predmeta:</h4>
+                <div id="protocol-docs-list" style="margin-bottom: 15px;"></div>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="new-doc-name-input" placeholder="Upiši naziv novog lista..." style="flex: 1;">
-                    <button class="btn btn-blue" onclick="createNewDocumentInProtocol()">➕ Dodaj novi list</button>
+                    <input type="text" id="new-doc-name-input" placeholder="Upiši naziv novog pratećeg lista..." style="flex: 1;">
+                    <button class="btn btn-blue" onclick="createNewDocumentInProtocol()">➕ Dodaj Novi List</button>
                 </div>
             </div>
 
-            <div style="background:#fff; padding:15px; border:1px solid var(--border-color); border-radius:6px; margin-bottom:20px;">
-                <label>📸 Skenirani prilozi / Slike:</label>
-                <input type="file" id="scan-uploader" accept="image/*" onchange="uploadScan(event)" style="margin-top:5px;">
-                <div id="scanned-zone" class="scanned-images-container" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+            <div style="background: var(--bg-card); padding: 20px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px;">
+                <label>📸 Skenirani Prilozi / Eksterni Dokazi:</label>
+                <input type="file" id="scan-uploader" accept="image/*" onchange="uploadScan(event)" style="margin-top:8px; color: var(--text-muted);">
+                <div id="scanned-zone" class="scanned-images-container" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:15px;"></div>
             </div>
 
-            <!-- INTERAKTIVNA ZONA UREĐIVANJA -->
-            <div id="document-editor-zone" style="display:none; background:#fff; padding:20px; border:1px solid var(--border-color); border-radius:6px;">
+            <div id="document-editor-zone" style="display:none; background: var(--bg-card); padding: 25px; border: 1px solid var(--border-color); border-radius: 8px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h4 id="active-document-title">Uređivanje</h4>
+                    <h4 id="active-document-title">Uređivanje Lista</h4>
                     <div style="display:flex; gap: 10px;">
-                        <button class="btn btn-blue" onclick="saveActiveDocumentLayout()">💾 Sačuvaj uneto</button>
-                        <button class="btn" onclick="prepareAndPrint()">🖨️ Odštampaj ovaj dokument</button>
+                        <button class="btn btn-blue" onclick="saveActiveDocumentLayout()">💾 Sačuvaj Izmene</button>
+                        <button class="btn btn-purple" onclick="prepareAndPrint()">🖨️ Odštampaj Ovaj Dokument</button>
                     </div>
                 </div>
 
-                <div style="background: #eaeded; padding: 15px; border-radius: 6px; margin-bottom: 20px;" class="print-hide">
-                    <label style="color: #000; font-weight: bold;">📑 Učitaj modularni obrazac:</label>
-                    <select id="template-selector" onchange="applyTemplateToDocument()" style="width: 100%; margin-top: 5px; font-weight: bold; padding:8px;">
+                <div style="background: var(--bg-main); padding: 15px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 20px;" class="print-hide">
+                    <label>📑 Učitaj Sistemski Obrazac / Šablon:</label>
+                    <select id="template-selector" onchange="applyTemplateToDocument()" style="width: 100%; margin-top: 5px; padding:10px;">
                         <option value="">-- Prazan list (Slobodan unos teksta) --</option>
                         <option value="potvrda_saradnik_pola">1. [POLA STRANE] Blanko Potvrda o saradnji</option>
                         <option value="potvrda_izvrseno">2. Potvrda o uspešno završenom poslu / zadatku</option>
@@ -281,18 +324,17 @@
                         <option value="cyber_analiza">7. Izveštaj o bezbednosti i tehničkoj analizi sistema</option>
                         <option value="memorandum_razmena">8. Memorandum za razmenu i kompenzaciju</option>
                         <option value="saglasnost">9. Roditeljska saglasnost za poslovna pravna lica</option>
-                        <option value="prijem_opreme">10. Zapisnik o prijemu i tehničkom pregledu hardvera</option>
+                        <option value="prijem_opreme">10. Zapisnik o prijemu i tehčkom pregledu hardvera</option>
                     </select>
                 </div>
 
-                <!-- ZONA ZA ŠTAMPU -->
                 <div id="print-zone">
                     <div id="doc-to-print" class="doc-canvas">
                         <div class="doc-system-header">
                             <img src="profilna.png" alt="Ognjen Tech Logo">
                             <div class="doc-header-info">
                                 <h2>Ognjen Filipović</h2>
-                                <p>Cybersecurity enthusiast & Tech Content Creator</p>
+                                <p>Cybersecurity Enthusiast & Tech Content Creator</p>
                                 <p>E-mail: ognjen.tech.contact@gmail.com | Tel: 0601979747</p>
                             </div>
                         </div>
@@ -303,72 +345,67 @@
             </div>
         </div>
 
-        <!-- PANE: VIDEO PRODUCTION MODUL -->
         <div id="video-production-pane" class="view-pane">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid var(--border-color); padding-bottom:10px;">
-                <h3>🎬 Napredni Modul za Video Produkciju & Analitiku</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:15px;">
+                <h3>🎬 Video Produkcija & Napredna Analitika</h3>
                 <button class="btn btn-purple" onclick="createNewVideoDraft()">➕ Kreiraj Novi Video Plan</button>
             </div>
 
-            <div style="display: grid; grid-template-columns: 320px 1fr; gap: 20px; height: calc(100% - 60px);">
-                <!-- Lista kreiranih videa -->
-                <div style="border-right: 1px solid var(--border-color); padding-right: 15px; overflow-y: auto;">
+            <div style="display: grid; grid-template-columns: 320px 1fr; gap: 25px; height: calc(100% - 65px);">
+                <div style="border-right: 1px solid var(--border-color); padding-right: 20px; overflow-y: auto;">
                     <div class="section-title">Moji Video Projekti</div>
                     <div id="video-projects-list"></div>
                     
-                    <div class="section-title" style="margin-top:25px;">Brzi Planer za Storije</div>
-                    <div style="background:#fff; padding:12px; border:1px solid var(--border-color); border-radius:6px;">
+                    <div class="section-title" style="margin-top:30px;">Brzi Planer za Storije</div>
+                    <div style="background: var(--bg-card); padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
                         <div class="form-group">
-                            <label>Cilj storija:</label>
-                            <input type="text" id="story-goal" placeholder="Npr. Anketa za tastaturu">
+                            <label>Cilj Storija:</label>
+                            <input type="text" id="story-goal" placeholder="Npr. Glasanje za tastere">
                         </div>
                         <div class="form-group">
                             <label>Tekst / Pitanje:</label>
-                            <textarea id="story-text" rows="2" placeholder="Šta piše na storiju..."></textarea>
+                            <textarea id="story-text" rows="2" placeholder="Sadržaj objave..."></textarea>
                         </div>
-                        <button class="btn btn-blue" style="width:100%; padding:6px;" onclick="saveQuickStory()">Sačuvaj stori</button>
-                        <div id="saved-stories-box" style="margin-top:10px; font-size:0.85rem;"></div>
+                        <button class="btn btn-blue" style="width:100%; padding:8px;" onclick="saveQuickStory()">Sačuvaj Stori</button>
+                        <div id="saved-stories-box" style="margin-top:15px; font-size:0.85rem;"></div>
                     </div>
                 </div>
 
-                <!-- Čarobnjak / Koraci za video -->
                 <div id="video-wizard-zone" style="display:none; overflow-y:auto; padding-right:5px;">
                     <div class="step-tabs">
                         <div class="step-tab active-tab" id="tab-1">1. Ideja i Hooks</div>
                         <div class="step-tab" id="tab-2">2. Distribucija i Protokol</div>
-                        <div class="step-tab" id="tab-3">3. Vremenske Metrike (24h/2d/5d)</div>
+                        <div class="step-tab" id="tab-3">3. Metrike (24h/2d/5d)</div>
                     </div>
 
-                    <!-- KORAK 1 -->
                     <div class="step-container active-step" id="step-1-view">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <h4>Faza Kreative i Strukture Videa</h4>
+                            <h4>Kreativni Koncept i Struktura</h4>
                             <button class="btn btn-green" onclick="printVideoConceptualPlan()">🖨️ Odštampaj Konceptualno-Vizuelni Plan</button>
                         </div>
                         <div class="form-group" style="margin-top:15px;">
-                            <label>Naslov / Glavna Ideja Videa:</label>
-                            <input type="text" id="v-title" placeholder="Npr. Testiram najbrži miš na svetu">
+                            <label>Naslov / Glavna Tema Videa:</label>
+                            <input type="text" id="v-title" placeholder="Npr. Detaljna recenzija Aula F75">
                         </div>
                         <div class="form-group">
                             <label>Glavna udica (HOOK) - Prve 3 sekunde:</label>
-                            <input type="text" id="v-hook" placeholder="Upiši brutalan hook koji drži pažnju...">
+                            <input type="text" id="v-hook" placeholder="Upiši rečenicu koja drži pažnju...">
                         </div>
                         <div class="form-group">
-                            <label>Razrada / Scenario:</label>
-                            <textarea id="v-body" rows="4" placeholder="Opis toka videa ili ključne tačke govora..."></textarea>
+                            <label>Razrada / Scenario / Točke izlaganja:</label>
+                            <textarea id="v-body" rows="4" placeholder="Vizuelni tok i scenario videa..."></textarea>
                         </div>
                         <div class="form-group">
                             <label>Poziv na akciju (CTA):</label>
-                            <input type="text" id="v-cta" placeholder="Npr. Zapratite za još stealth tech sadržaja">
+                            <input type="text" id="v-cta" placeholder="Npr. Zapratite za više tamnog tehničkog sadržaja">
                         </div>
-                        <button class="btn btn-purple" style="float:right;" onclick="goToVideoStep(2)">Dalje ➔</button>
+                        <button class="btn btn-purple" style="float:right;" onclick="goToVideoStep(2)">Sledeći korak ➔</button>
                     </div>
 
-                    <!-- KORAK 2 -->
                     <div class="step-container" id="step-2-view">
-                        <h4>Mesto Objave i Povezivanje sa Arhivom</h4>
+                        <h4>Platforma i Integracija sa Arhivom</h4>
                         <div class="form-group" style="margin-top:15px;">
-                            <label>Gde ćeš objaviti ovaj video?</label>
+                            <label>Platforma za Plasiranje:</label>
                             <select id="v-platform">
                                 <option value="TikTok">TikTok</option>
                                 <option value="YouTube Shorts">YouTube Shorts</option>
@@ -377,53 +414,47 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Poveži video sa postojećim Arhivskim Protokolom brenda:</label>
+                            <label>Poveži video sa Protokolom:</label>
                             <select id="v-protocol-link">
-                                <option value="">-- Ostavi nepovezano / Samostalni video --</option>
+                                <option value="">-- Samostalni sadržaj (Bez protokola) --</option>
                             </select>
-                            <small style="color:var(--text-muted); margin-top:3px;">Ovim automatski sinhronizuješ statistiku videa sa predmetom u arhivi.</small>
                         </div>
                         <div style="display:flex; justify-content:space-between; margin-top:20px;">
                             <button class="btn" onclick="goToVideoStep(1)">⬅ Nazad</button>
-                            <button class="btn btn-purple" onclick="goToVideoStep(3)">Dalje ➔</button>
+                            <button class="btn btn-purple" onclick="goToVideoStep(3)">Sledeći korak ➔</button>
                         </div>
                     </div>
 
-                    <!-- KORAK 3 -->
                     <div class="step-container" id="step-3-view">
-                        <h4>Praćenje Performansi kroz Vreme</h4>
-                        
+                        <h4>Praćenje Performansi i Analitika</h4>
                         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px; margin-top:15px;">
-                            <div style="background:#f8f9fa; padding:10px; border:1px solid var(--border-color); border-radius:6px;">
-                                <h5>⏱️ Nakon 24 Sata</h5>
+                            <div style="background: var(--bg-main); padding:12px; border:1px solid var(--border-color); border-radius:6px;">
+                                <h5 style="color: var(--accent-blue);">⏱️ Nakon 24h</h5>
                                 <div class="form-group" style="margin-top:10px;"><label>Pregledi:</label><input type="number" id="m-24-v" value="0"></div>
                                 <div class="form-group"><label>Lajkovi:</label><input type="number" id="m-24-l" value="0"></div>
                             </div>
-                            <div style="background:#f8f9fa; padding:10px; border:1px solid var(--border-color); border-radius:6px;">
-                                <h5>⏱️ Nakon 2 Dana</h5>
+                            <div style="background: var(--bg-main); padding:12px; border:1px solid var(--border-color); border-radius:6px;">
+                                <h5 style="color: var(--accent-purple);">⏱️ Nakon 2 Dana</h5>
                                 <div class="form-group" style="margin-top:10px;"><label>Pregledi:</label><input type="number" id="m-2d-v" value="0"></div>
                                 <div class="form-group"><label>Lajkovi:</label><input type="number" id="m-2d-l" value="0"></div>
                             </div>
-                            <div style="background:#f8f9fa; padding:10px; border:1px solid var(--border-color); border-radius:6px;">
-                                <h5>⏱️ Nakon 5 Dana</h5>
+                            <div style="background: var(--bg-main); padding:12px; border:1px solid var(--border-color); border-radius:6px;">
+                                <h5 style="color: var(--folder-zelena);">⏱️ Nakon 5 Dana</h5>
                                 <div class="form-group" style="margin-top:10px;"><label>Pregledi:</label><input type="number" id="m-5d-v" value="0"></div>
                                 <div class="form-group"><label>Lajkovi:</label><input type="number" id="m-5d-l" value="0"></div>
                             </div>
                         </div>
-
                         <div style="margin-top:20px; display:flex; justify-content:space-between;">
                             <button class="btn" onclick="goToVideoStep(2)">⬅ Nazad</button>
                             <div style="display:flex; gap:10px;">
                                 <button class="btn btn-danger" onclick="deleteActiveVideoProject()">Obriši</button>
-                                <button class="btn btn-green" onclick="saveCompleteVideoProject()">💾 Sačuvaj Ceo Projekat</button>
+                                <button class="btn btn-green" onclick="saveCompleteVideoProject()">💾 Sačuvaj u Bazu</button>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -432,68 +463,55 @@
         
         if (!db._videoProjects) db._videoProjects = [];
         if (!db._quickStories) db._quickStories = [];
-
         let activeVideoIndex = null;
 
         const templates = {
             potvrda_saradnik_pola: [
                 { type: 'label', label: 'EVIDENCIJA I DATUM PROTOKOLA:' },
-                { type: 'input', placeholder: 'Broj protokola i datum se upisuju ovde...', value: '' },
+                { type: 'input', placeholder: 'Broj protokola...', value: '' },
                 { type: 'label', label: 'DOKUMENT O EKSTERNOM ANGAŽOVANJU' },
-                { type: 'textarea', placeholder: '1. Ovim se garantuje da partner/brend _________________________ ima status saradnika.\n2. Angažovanje obuhvata oblast: _________________________\n3. Status saradnje: Aktivna i zavedena pod zvaničnim protokolom.\n4. Sva prava na promociju i tehničko zastupanje su regulisana.\n5. Obe strane potvrđuju tačnost unetih podataka.', value: '' },
+                { type: 'textarea', placeholder: '1. Ovim se garantuje da partner/brend _________________________ ima status saradnika.\n2. Angažovanje obuhvata oblast: _________________________\n3. Status saradnje: Aktivna i zavedena pod zvaničnim protokolom.', value: '' },
                 { type: 'stamp' }
             ],
             potvrda_izvrseno: [
                 { type: 'label', label: 'BROJ PREDMETA I STATUS:' },
                 { type: 'input', placeholder: 'Upiši broj...' },
-                { type: 'label', label: 'KOOPERANT / IZVRŠILAC ZADATKA:' },
-                { type: 'input', placeholder: 'Naziv lica ili kompanije...' },
                 { type: 'label', label: 'ZAKLJUČAK EVALUACIJE RADA:' },
-                { type: 'select', options: ['Zadatak je izvršen besprekorno, u roku i bez tehničkih grešaka', 'Ugovorena hardverska kompenzacija je u celosti isporučena', 'Sistem je uspešno podešen i optimizovan'] },
-                { type: 'label', label: 'DODATNI DETALJI:' },
-                { type: 'textarea', placeholder: 'Kucaj slobodan komentar ili zapažanje ovde...', value: '' },
+                { type: 'select', options: ['Zadatak je izvršen besprekorno, u roku i bez tehničkih grešaka', 'Ugovorena hardverska kompenzacija je u celosti isporučena'] },
                 { type: 'stamp' }
             ],
             ugovor: [
                 { type: 'label', label: 'UGOVORNE STRANE:' },
                 { type: 'textarea', placeholder: '1. Ognjen Filipović, Aranđelovac\n2. Partner: ___________________________', value: '' },
-                { type: 'label', label: 'FINANSIJSKO-LOGISTIČKI MODEL:' },
-                { type: 'select', options: ['Kompenzacija za hardversku opremu i periferije', 'Fiksno sponzorstvo (Plaćeni budžet)', 'Affiliate partnerstvo / Pro-bono rad'] },
                 { type: 'label', label: 'OBAVEZE PRVE STRANE:' },
-                { type: 'textarea', placeholder: 'Izrada video materijala, testiranje opreme i plasiranje na TikTok nalogu sa 2500+ pratilaca.', value: '' },
+                { type: 'textarea', placeholder: 'Izrada video materijala i plasiranje na TikTok nalogu sa 2500+ pratilaca.', value: '' },
                 { type: 'stamp' }
             ],
             sednica: [
                 { type: 'label', label: 'ORGAN UPRAVLJANJA:' },
                 { type: 'input', placeholder: 'Upravni Odbor Ognjen.Tech', value: 'Upravni Odbor Ognjen.Tech' },
                 { type: 'label', label: 'TEMA SASTANKA I DNEVNI RED:' },
-                { type: 'textarea', placeholder: '1. Razmatranje novih ugovora\n2. Plan i priprema za projekat Face Reveal\n3. Tekuća pitanja arhiviranja', value: '' },
+                { type: 'textarea', placeholder: '1. Razmatranje novih ugovora\n2. Plan i priprema za projekat Face Reveal', value: '' },
                 { type: 'stamp' }
             ],
             izvestaj: [
                 { type: 'label', label: 'PRODUKCIJSKI PERIOD:' },
                 { type: 'input', placeholder: 'Mesec/Godina...', value: '' },
                 { type: 'label', label: 'ANALIZE I METRIKE RASTA:' },
-                { type: 'textarea', placeholder: 'Broj pratilaca: ______\nPregledi na viralnom videu: ______\nStatus GitHub projekata: ______', value: '' },
+                { type: 'textarea', placeholder: 'Broj pratilaca: ______\nPregledi na viralnom videu: ______', value: '' },
                 { type: 'stamp' }
             ],
             zapisnik: [
-                { type: 'label', label: 'MESTO I VREME ODRŽAVANJA SREĆANJA:' },
+                { type: 'label', label: 'MESTO I VREME ODRŽAVANJA SASTANKA:' },
                 { type: 'input', placeholder: 'U Aranđelovcu, dana...', value: '' },
-                { type: 'label', label: 'PRISUTNA LICA:' },
-                { type: 'textarea', placeholder: '1. Ognjen Filipović\n2. Predstavnici brenda: ___________________________', value: '' },
                 { type: 'stamp' }
             ],
             cyber_analiza: [
                 { type: 'label', label: 'NAZIV I SVRHA ANALIZIRANOG SISTEMA:' },
                 { type: 'input', placeholder: 'Npr. MedCore HIS / Lokalna baza podataka', value: '' },
-                { type: 'label', label: 'KATEGORIJA SIGURNOSTI:' },
-                { type: 'select', options: ['Sistem je stabilan i bez kritičnih ranjivosti', 'Potrebna hitna revizija pristupnih kodova i baze', 'Simulacija sistema izvršena uspešno'] },
                 { type: 'stamp' }
             ],
             memorandum_razmena: [
-                { type: 'label', label: 'OZNAKA OBRAČUNA:' },
-                { type: 'input', placeholder: 'MEM-____/2026', value: '' },
                 { type: 'label', label: 'OPIS SPECIFIKACIJE:' },
                 { type: 'textarea', placeholder: 'Razmena marketinških usluga za sledeće periferije: ___________________________', value: '' },
                 { type: 'stamp' }
@@ -501,15 +519,11 @@
             saglasnost: [
                 { type: 'label', label: 'DAVALAC SAGLASNOSTI (RODITELJ/STARATELJ):' },
                 { type: 'input', placeholder: 'Ime i prezime roditelja...', value: '' },
-                { type: 'label', label: 'TEKST IZJAVE:' },
-                { type: 'textarea', placeholder: 'Ovim dajem punu saglasnost za učešće i potpisivanje poslovno-tehničkih ugovora maloletnog Ognjena Filipovića sa spoljnim saradnicima.', value: '' },
                 { type: 'stamp' }
             ],
             prijem_opreme: [
                 { type: 'label', label: 'MODEL I SPECIFIKACIJA HARDVERA:' },
                 { type: 'input', placeholder: 'Npr. Mehanička tastatura, miš, IPS monitor...', value: '' },
-                { type: 'label', label: 'STANJE OPREME PRI TESTIRANJU:' },
-                { type: 'select', options: ['Fabrički novo, thocky zvuk prekidača, ispravno', 'Testni primerak, bez vidljivih tragova korišćenja', 'Paket oštećen u transportu, uređaj funkcionalan'] },
                 { type: 'stamp' }
             ]
         };
@@ -528,36 +542,71 @@
             document.querySelectorAll('.view-pane').forEach(p => p.classList.toggle('active-pane', p.id === id));
         }
 
-        function createProtocol() {
-            let id = document.getElementById('proto-id').value.trim();
-            let title = document.getElementById('proto-title').value.trim();
-            if(!id || !title) { alert('Unesi broj protokola i naziv!'); return; }
-            
-            db[id] = { 
-                id, color: selectedFolderColor, title, 
-                partner: document.getElementById('proto-partner').value.trim() || 'Nije definisano', 
-                type: document.getElementById('proto-type').value, 
-                note: document.getElementById('proto-note').value.trim() || '/', 
-                scans: [], documents: [] 
-            };
-            saveToStorage(); renderSidebar(); openProtocol(id);
-            ['proto-id', 'proto-title', 'proto-partner', 'proto-note'].forEach(field => document.getElementById(field).value = '');
-        }
-
         function renderSidebar() {
             let list = document.getElementById('sidebar-protocols-list'); list.innerHTML = '';
             Object.values(db).forEach(p => {
                 if(p.id && p.id !== '_videoProjects' && p.id !== '_quickStories') {
-                    let div = document.createElement('div'); div.className = 'protocol-item'; div.onclick = () => openProtocol(p.id);
+                    let div = document.createElement('div'); div.className = 'protocol-item'; div.onclick = () => triggerGateway(p.id);
                     let box = document.createElement('div'); box.className = 'folder-box'; box.style.backgroundColor = p.color;
                     div.appendChild(box); div.appendChild(document.createTextNode(`Prot. ${p.id} - ${p.title}`)); list.appendChild(div);
                 }
             });
         }
 
+        /* DETEKCIJA KADA SE KLIKNE NA STARI PROTOKOL - ZAHTEVA SE PROCEDURA */
+        function triggerGateway(id) {
+            document.getElementById('gateway-target-proto-id').value = id;
+            document.getElementById('gateway-osnov').value = '';
+            document.getElementById('gateway-razlog').value = '';
+            showPane('protocol-gateway-pane');
+        }
+
+        /* POTVRDA AUTORIZACIJE I TRAJNO LOGOVANJE PROCEDURE ULASKA */
+        function authorizeAndOpenProtocol() {
+            let id = document.getElementById('gateway-target-proto-id').value;
+            let osnov = document.getElementById('gateway-osnov').value.trim();
+            let razlog = document.getElementById('gateway-razlog').value.trim();
+            
+            if(!osnov || !razlog) {
+                alert('ZABRANJEN PRISTUP: Procedura ulaska u protokol zahteva zvanični pravni osnov i obrazložen razlog!');
+                return;
+            }
+
+            // Kreiraj log zapis sa sistemskim vremenom
+            let sada = new Date();
+            let timestamp = sada.toLocaleDateString() + " u " + (sada.getHours()<10?'0':'') + sada.getHours() + ":" + (sada.getMinutes()<10?'0':'') + sada.getMinutes();
+            
+            if(!db[id].accessLogs) db[id].accessLogs = [];
+            db[id].accessLogs.push({ timestamp, osnov, razlog });
+            
+            saveToStorage();
+            openProtocol(id);
+        }
+
+        function createProtocol() {
+            let id = document.getElementById('proto-id').value.trim();
+            let title = document.getElementById('proto-title').value.trim();
+            if(!id || !title) { alert('Greška: Polja za broj protokola i naziv predmeta moraju biti popunjena!'); return; }
+            
+            let sada = new Date();
+            let inicijalniTimestamp = sada.toLocaleDateString() + " u " + (sada.getHours()<10?'0':'') + sada.getHours() + ":" + (sada.getMinutes()<10?'0':'') + sada.getMinutes();
+
+            db[id] = { 
+                id, color: selectedFolderColor, title, 
+                partner: document.getElementById('proto-partner').value.trim() || 'Nije definisano', 
+                type: document.getElementById('proto-type').value, 
+                initialDesc: document.getElementById('proto-proc-razlog').value.trim() || 'Prvo otvaranje predmeta',
+                scans: [], documents: [],
+                accessLogs: [{ timestamp: inicijalniTimestamp, osnov: "Inicijalno formiranje predmeta u bazi", razlog: "Pokretanje novog protokola" }]
+            };
+            
+            saveToStorage(); renderSidebar(); openProtocol(id);
+            ['proto-id', 'proto-title', 'proto-partner', 'proto-proc-razlog'].forEach(field => document.getElementById(field).value = '');
+        }
+
         function openProtocol(id) {
             activeProtocolId = id; activeDocumentIndex = null;
-            document.getElementById('manage-proto-title').innerText = `Protokol: ${db[id].id} — ${db[id].title}`;
+            document.getElementById('manage-proto-title').innerText = `Predmet: ${db[id].id} — ${db[id].title}`;
             document.getElementById('document-editor-zone').style.display = 'none';
             
             if(!db[id].documents) db[id].documents = [];
@@ -634,7 +683,6 @@
         function saveActiveDocumentLayout() {
             let doc = db[activeProtocolId].documents[activeDocumentIndex];
             doc.elements = [];
-            
             for(let r of document.getElementById('dynamic-elements-area').children) {
                 let type = r.getAttribute('data-type'); let item = { type };
                 if(type === 'label') item.label = r.querySelector('label').innerText;
@@ -656,8 +704,7 @@
                 let type = r.getAttribute('data-type');
                 if(['input', 'textarea', 'select'].includes(type)) {
                     let element = r.querySelector('input, textarea, select');
-                    let printSpan = document.createElement('span');
-                    printSpan.className = 'print-text-line';
+                    let printSpan = document.createElement('span'); printSpan.className = 'print-text-line';
                     printSpan.innerText = element.value || '___________________________';
                     element.style.display = 'none'; r.appendChild(printSpan);
                 }
@@ -669,21 +716,58 @@
             }
         }
 
+        /* ŠTAMPA PROTOKOLARNOG LISTA SA GENERISANIM REVIZIJAMA / LOGOVIMA ULASKA */
         function printWholeProtocolSheet() {
             let p = db[activeProtocolId];
-            let docsHtml = p.documents.length ? p.documents.map(d => `<li style="margin-bottom:8px; font-weight:bold;">📄 ${d.name.toUpperCase()}</li>`).join('') : '<li><i>Nema zavedenih listova.</i></li>';
+            let docsHtml = p.documents.length ? p.documents.map(d => `<li style="margin-bottom:6px;">📄 ${d.name.toUpperCase()}</li>`).join('') : '<li><i>Nema zavedenih listova.</i></li>';
+            
+            // Generisanje tabele logova ulaska (Audit Trail)
+            let logsHtml = p.accessLogs && p.accessLogs.length ? p.accessLogs.map(l => `
+                <tr style="font-size:0.85rem;">
+                    <td style="border:1px solid #000; padding:5px;">${l.timestamp}</td>
+                    <td style="border:1px solid #000; padding:5px; font-weight:bold;">${l.osnov}</td>
+                    <td style="border:1px solid #000; padding:5px; font-style:italic;">${l.razlog}</td>
+                </tr>
+            `).join('') : '<tr><td colspan="3" style="text-align:center; padding:5px;">Nema zabeleženih eksternih pristupa.</td></tr>';
+
             let printZone = document.getElementById('print-zone'); let stariSadrzaj = printZone.innerHTML;
 
             printZone.innerHTML = `
-                <div class="doc-canvas" style="font-family:'Courier New', monospace;">
-                    <div style="text-align:center; border-bottom:3px double #000; padding-bottom:15px; margin-bottom:30px;">
-                        <h2>OGNJEN TECH ASSISTANT — ARHIVSKI PROTOKOLARNI LIST</h2>
+                <div class="doc-canvas" style="font-family:'Courier New', monospace; line-height: 1.4; color:#000; background:#fff;">
+                    <div style="text-align:center; border-bottom:3px double #000; padding-bottom:15px; margin-bottom:25px;">
+                        <h2 style="font-size:1.4rem;">OGNJEN TECH — SLUŽBENI PROTOKOLARNI LIST</h2>
                     </div>
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:30px; font-size:1.1rem;">
-                        <tr><td style="padding:10px; border:1px solid #000; width:35%; font-weight:bold;">BROJ PROTOKOLA:</td><td style="padding:10px; border:1px solid #000; font-weight:bold;">${p.id}</td></tr>
-                        <tr><td style="padding:10px; border:1px solid #000; font-weight:bold;">NAZIV PREDMETA:</td><td style="padding:10px; border:1px solid #000;">${p.title.toUpperCase()}</td></tr>
+                    
+                    <h3 style="font-size:1.1rem; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:10px;">I. OSNOVNI PARAMETRI PREDMETA</h3>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:20px; font-size:1rem;">
+                        <tr><td style="padding:6px; border:1px solid #000; width:40%; font-weight:bold;">BROJ PROTOKOLA:</td><td style="padding:6px; border:1px solid #000; font-weight:bold;">${p.id}</td></tr>
+                        <tr><td style="padding:6px; border:1px solid #000; font-weight:bold;">NAZIV PREDMETA:</td><td style="padding:6px; border:1px solid #000;">${p.title.toUpperCase()}</td></tr>
+                        <tr><td style="padding:6px; border:1px solid #000; font-weight:bold;">PARTNER / KLIJENT:</td><td style="padding:6px; border:1px solid #000;">${p.partner}</td></tr>
+                        <tr><td style="padding:6px; border:1px solid #000; font-weight:bold;">KLASIFIKACIJA SARADNJE:</td><td style="padding:6px; border:1px solid #000;">${p.type}</td></tr>
                     </table>
-                    <h3>STRUKTURA ZAVEDENIH DOKUMENATA:</h3><ol style="margin-left:25px; margin-top:15px;">${docsHtml}</ol>
+
+                    <h3 style="font-size:1.1rem; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:10px;">II. STRUKTURA AKTIVNIH DOKUMENATA</h3>
+                    <ol style="margin-left:25px; margin-bottom:25px; font-size:1rem;">${docsHtml}</ol>
+
+                    <h3 style="font-size:1.1rem; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:10px;">III. BEZBEDNOSNI AUDIT LOGOVI PROCEDURA PRISTUPA</h3>
+                    <p style="font-size:0.8rem; margin-bottom:8px; color:#444;">Automatska hronološka evidencija svih autorizovanih ulazaka u predmet:</p>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:25px; text-align:left;">
+                        <thead>
+                            <tr style="background:#e5e7eb;">
+                                <th style="border:1px solid #000; padding:6px; font-size:0.9rem;">VREME (SISTEM)</th>
+                                <th style="border:1px solid #000; padding:6px; font-size:0.9rem;">SLUŽBENI OSNOV</th>
+                                <th style="border:1px solid #000; padding:6px; font-size:0.9rem;">RAZLOG PRISTUPA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${logsHtml}
+                        </tbody>
+                    </table>
+
+                    <div style="display:flex; justify-content:space-between; margin-top:60px;">
+                        <div class="stamp-box">M.P.<br><br>OGNJEN TECH<br>CENTRALNA</div>
+                        <div style="text-align:right; align-self: flex-end;"><p>POTPIS ODGOVORNOG LICA:</p><br><p>___________________________</p></div>
+                    </div>
                 </div>`;
             window.print(); printZone.innerHTML = stariSadrzaj;
             loadDocumentIntoEditor(activeDocumentIndex !== null ? activeDocumentIndex : 0);
@@ -708,21 +792,19 @@
         }
 
         function deleteCurrentProtocol() {
-            if(confirm('Obrisati ceo protokol?')) { delete db[activeProtocolId]; saveToStorage(); renderSidebar(); showPane('new-protocol-pane'); }
+            if(confirm('Upozorenje: Da li ste sigurni da želite obrisati kompletan protokol i sve njegove listove?')) { delete db[activeProtocolId]; saveToStorage(); renderSidebar(); showPane('new-protocol-pane'); }
         }
 
         function saveToStorage() { localStorage.setItem('ognjen_v4_db', JSON.stringify(db)); }
 
-        /* ================== MODUL: VIDEO PRODUKCIJA ================== */
+        /* MODUL: VIDEO PRODUKCIJA */
         function openVideoProductionPane() {
-            showPane('video-production-pane');
-            buildProtocolSelectOptions();
-            renderVideoProjectsList();
+            showPane('video-production-pane'); buildProtocolSelectOptions(); renderVideoProjectsList();
         }
 
         function buildProtocolSelectOptions() {
             let select = document.getElementById('v-protocol-link');
-            select.innerHTML = '<option value="">-- Ostavi nepovezano / Samostalni video --</option>';
+            select.innerHTML = '<option value="">-- Samostalni sadržaj (Bez protokola) --</option>';
             Object.values(db).forEach(p => {
                 if(p.id && p.id !== '_videoProjects' && p.id !== '_quickStories') {
                     let opt = document.createElement('option'); opt.value = p.id; opt.innerText = `Prot: ${p.id} - ${p.title}`;
@@ -741,8 +823,7 @@
         }
 
         function loadVideoProjectIntoWizard(index) {
-            activeVideoIndex = index;
-            let v = db._videoProjects[index];
+            activeVideoIndex = index; let v = db._videoProjects[index];
             document.getElementById('v-title').value = v.title || '';
             document.getElementById('v-hook').value = v.hook || '';
             document.getElementById('v-body').value = v.body || '';
@@ -757,8 +838,7 @@
             document.getElementById('m-5d-v').value = v.metrics?.m5d?.v || 0;
             document.getElementById('m-5d-l').value = v.metrics?.m5d?.l || 0;
 
-            document.getElementById('video-wizard-zone').style.display = 'block';
-            goToVideoStep(1);
+            document.getElementById('video-wizard-zone').style.display = 'block'; goToVideoStep(1);
         }
 
         function goToVideoStep(stepNum) {
@@ -770,10 +850,8 @@
             if(activeVideoIndex === null) return;
             let v = db._videoProjects[activeVideoIndex];
             v.title = document.getElementById('v-title').value.trim() || 'Bez naslova';
-            v.hook = document.getElementById('v-hook').value.trim();
-            v.body = document.getElementById('v-body').value.trim();
-            v.cta = document.getElementById('v-cta').value.trim();
-            v.platform = document.getElementById('v-platform').value;
+            v.hook = document.getElementById('v-hook').value.trim(); v.body = document.getElementById('v-body').value.trim();
+            v.cta = document.getElementById('v-cta').value.trim(); v.platform = document.getElementById('v-platform').value;
             v.linkedProtocol = document.getElementById('v-protocol-link').value;
 
             v.metrics = {
@@ -781,9 +859,7 @@
                 m2d: { v: parseInt(document.getElementById('m-2d-v').value) || 0, l: parseInt(document.getElementById('m-2d-l').value) || 0 },
                 m5d: { v: parseInt(document.getElementById('m-5d-v').value) || 0, l: parseInt(document.getElementById('m-5d-l').value) || 0 }
             };
-
-            saveToStorage(); renderVideoProjectsList();
-            alert('Video projekat uspešno sačuvan u bazu podataka!');
+            saveToStorage(); renderVideoProjectsList(); alert('Sistem: Video projekat uspešno sačuvan.');
         }
 
         function renderVideoProjectsList() {
@@ -792,128 +868,53 @@
                 let div = document.createElement('div'); div.className = 'video-card';
                 let najnovijiPregledi = v.metrics?.m5d?.v || v.metrics?.m2d?.v || v.metrics?.m24?.v || 0;
                 div.innerHTML = `<strong>🎬 ${v.title}</strong><br>
-                    <small>Mreža: ${v.platform} | Protokol: ${v.linkedProtocol || 'Nema'} | Poslednji pregledi: ${najnovijiPregledi}</small>`;
-                div.onclick = () => loadVideoProjectIntoWizard(index);
-                container.appendChild(div);
+                    <small style="color:var(--text-muted);">Mreža: ${v.platform} | Pregledi: ${najnovijiPregledi}</small>`;
+                div.onclick = () => loadVideoProjectIntoWizard(index); container.appendChild(div);
             });
         }
 
         function deleteActiveVideoProject() {
-            if(confirm('Obrisati ovaj video plan?')) {
+            if(confirm('Obrisati izabrani video plan?')) {
                 db._videoProjects.splice(activeVideoIndex, 1); saveToStorage();
-                document.getElementById('video-wizard-zone').style.display = 'none';
-                renderVideoProjectsList();
+                document.getElementById('video-wizard-zone').style.display = 'none'; renderVideoProjectsList();
             }
         }
 
-        /* FUNKCIJA ZA ŠTAMPU KONCEPTUALNO-VIZUELNOG PLANA */
         function printVideoConceptualPlan() {
             let title = document.getElementById('v-title').value.trim() || 'Novi Video Plan';
-            let hook = document.getElementById('v-hook').value.trim() || '___________________________';
-            let body = document.getElementById('v-body').value.trim() || '___________________________';
-            let cta = document.getElementById('v-cta').value.trim() || '___________________________';
+            let hook = document.getElementById('v-hook').value.trim();
+            let body = document.getElementById('v-body').value.trim();
+            let cta = document.getElementById('v-cta').value.trim();
             let platform = document.getElementById('v-platform').value;
             let linkedProto = document.getElementById('v-protocol-link').value || 'Nije povezano';
 
-            let printZone = document.getElementById('print-zone');
-            let stariSadrzaj = printZone.innerHTML;
+            let printZone = document.getElementById('print-zone'); let stariSadrzaj = printZone.innerHTML;
 
             printZone.innerHTML = `
-                <div class="doc-canvas" style="font-family:'Courier New', monospace; line-height: 1.5;">
+                <div class="doc-canvas" style="font-family:'Courier New', monospace; line-height: 1.5; color:#000; background:#fff;">
                     <div class="doc-system-header">
                         <img src="profilna.png" alt="Ognjen Tech Logo">
-                        <div class="doc-header-info">
-                            <h2>Ognjen Filipović</h2>
-                            <p>Cybersecurity enthusiast & Tech Content Creator</p>
-                            <p>E-mail: ognjen.tech.contact@gmail.com | Tel: 0601979747</p>
-                        </div>
+                        <div class="doc-header-info"><h2>Ognjen Filipović</h2><p>Cybersecurity Enthusiast</p></div>
                     </div>
-                    
-                    <div style="text-align:center; margin-bottom:30px; font-weight:bold; font-size:1.3rem; text-transform: uppercase;">
-                        KONCEPTUALNO-VIZUELNI PLAN VIDEO MATERIJALA
-                    </div>
-
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:25px; font-size:1rem;">
-                        <tr>
-                            <td style="padding:8px; border:1px solid #000; font-weight:bold; width:30%;">NASLOV / IDEJA:</td>
-                            <td style="padding:8px; border:1px solid #000; font-weight:bold;">${title.toUpperCase()}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:8px; border:1px solid #000; font-weight:bold;">PLATFORMA:</td>
-                            <td style="padding:8px; border:1px solid #000;">${platform}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:8px; border:1px solid #000; font-weight:bold;">ARHIVSKI PROTOKOL:</td>
-                            <td style="padding:8px; border:1px solid #000;">${linkedProto}</td>
-                        </tr>
+                    <div style="text-align:center; margin-bottom:30px; font-weight:bold; font-size:1.3rem;">KONCEPTUALNO-VIZUELNI PLAN VIDEO MATERIJALA</div>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:25px;">
+                        <tr><td style="padding:8px; border:1px solid #000; font-weight:bold;">NASLOV:</td><td style="padding:8px; border:1px solid #000; font-weight:bold;">${title.toUpperCase()}</td></tr>
+                        <tr><td style="padding:8px; border:1px solid #000; font-weight:bold;">MREŽA:</td><td style="padding:8px; border:1px solid #000;">${platform}</td></tr>
                     </table>
-
-                    <div style="margin-bottom:20px;">
-                        <span style="font-weight:bold; display:block; margin-bottom:5px;">🪝 UDICA (HOOK) - PRVE 3 SEKUNDE:</span>
-                        <div style="border:1px dashed #000; padding:10px; min-height:50px; background:#fafafa; white-space: pre-wrap;">${hook}</div>
-                    </div>
-
-                    <div style="margin-bottom:20px;">
-                        <span style="font-weight:bold; display:block; margin-bottom:5px;">📝 RAZRADA / SCENARIO / VIZUELNI TOK:</span>
-                        <div style="border:1px dashed #000; padding:10px; min-height:15px; background:#fafafa; white-space: pre-wrap;">${body}</div>
-                    </div>
-
-                    <div style="margin-bottom:30px;">
-                        <span style="font-weight:bold; display:block; margin-bottom:5px;">📢 POZIV NA AKCIJU (CTA):</span>
-                        <div style="border:1px dashed #000; padding:10px; min-height:50px; background:#fafafa; white-space: pre-wrap;">${cta}</div>
-                    </div>
-
-                    <div style="margin-top:30px; border-top:2px solid #000; padding-top:15px;">
-                        <span style="font-weight:bold; display:block; margin-bottom:10px;">📊 ANALITIKA I EVALUACIJA (BELEŽENJE NA TERENU):</span>
-                        <table style="width:100%; border-collapse:collapse; text-align:center;">
-                            <thead>
-                                <tr style="background:#eeeeee;">
-                                    <th style="border:1px solid #000; padding:6px;">VREMENSKA TAČKA</th>
-                                    <th style="border:1px solid #000; padding:6px;">PREGLEDI (VIEWS)</th>
-                                    <th style="border:1px solid #000; padding:6px;">LAJKOVI (LIKES)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="border:1px solid #000; padding:10px; font-weight:bold;">NAKON 24 SATA</td>
-                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
-                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
-                                </tr>
-                                <tr>
-                                    <td style="border:1px solid #000; padding:10px; font-weight:bold;">NAKON 2 DANA</td>
-                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
-                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
-                                </tr>
-                                <tr>
-                                    <td style="border:1px solid #000; padding:10px; font-weight:bold;">NAKON 5 DANA</td>
-                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
-                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
+                    <div><b>🪝 HOOK:</b><div style="border:1px dashed #000; padding:10px; min-height:40px; white-space:pre-wrap;">${hook}</div></div><br>
+                    <div><b>📝 SCENARIO:</b><div style="border:1px dashed #000; padding:10px; min-height:120px; white-space:pre-wrap;">${body}</div></div><br>
+                    <div><b>📢 CTA:</b><div style="border:1px dashed #000; padding:10px; min-height:40px; white-space:pre-wrap;">${cta}</div></div>
                     <div style="display:flex; justify-content:space-between; margin-top:50px;">
                         <div class="stamp-box">M.P.<br><br>OGNJEN TECH<br>PRODUKCIJA</div>
-                        <div style="text-align:right; align-self: flex-end;"><p>POTPIS PRODUCENTA:</p><br><p>___________________________</p></div>
                     </div>
                 </div>`;
-
-            window.print();
-            printZone.innerHTML = stariSadrzaj;
-            
-            // Re-inicijalizacija prikaza dokumenta u editoru ako je bio otvoren
-            if(activeProtocolId && activeDocumentIndex !== null) {
-                loadDocumentIntoEditor(activeDocumentIndex);
-            }
+            window.print(); printZone.innerHTML = stariSadrzaj;
+            if(activeProtocolId && activeDocumentIndex !== null) loadDocumentIntoEditor(activeDocumentIndex);
         }
 
-        /* BRZI STORIJER */
         function saveQuickStory() {
-            let goal = document.getElementById('story-goal').value.trim();
-            let text = document.getElementById('story-text').value.trim();
-            if(!goal) return;
-            db._quickStories.push({ goal, text, date: new Date().toLocaleDateString() });
+            let goal = document.getElementById('story-goal').value.trim(); let text = document.getElementById('story-text').value.trim();
+            if(!goal) return; db._quickStories.push({ goal, text, date: new Date().toLocaleDateString() });
             saveToStorage(); renderQuickStories();
             document.getElementById('story-goal').value = ''; document.getElementById('story-text').value = '';
         }
@@ -921,15 +922,13 @@
         function renderQuickStories() {
             let container = document.getElementById('saved-stories-box'); container.innerHTML = '';
             db._quickStories.forEach((s, idx) => {
-                let d = document.createElement('div'); d.style = 'border-bottom: 1px dashed #ccc; padding: 5px 0;';
-                d.innerHTML = `🎯 <b>${s.goal}</b>: ${s.text} <span style="color:red; cursor:pointer; margin-left:5px;" onclick="deleteStory(${idx})">✖</span>`;
+                let d = document.createElement('div'); d.style = 'border-bottom: 1px dashed var(--border-color); padding: 8px 0;';
+                d.innerHTML = `🎯 <b>${s.goal}</b>: ${s.text} <span style="color:var(--folder-crvena); cursor:pointer; margin-left:8px;" onclick="deleteStory(${idx})">✖</span>`;
                 container.appendChild(d);
             });
         }
 
-        function deleteStory(idx) {
-            db._quickStories.splice(idx, 1); saveToStorage(); renderQuickStories();
-        }
+        function deleteStory(idx) { db._quickStories.splice(idx, 1); saveToStorage(); renderQuickStories(); }
     </script>
 </body>
 </html>
