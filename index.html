@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ognjen Tech Assistant - Arhivski & Video Sistem v7.0</title>
+    <title>Ognjen Tech Assistant - Arhivski & Video Sistem v7.1</title>
     <style>
         :root {
             --bg-main: #f4f6f9;
@@ -169,7 +169,7 @@
     <div id="sidebar">
         <div class="sidebar-header">
             <img src="profilna.png" alt="Ognjen Tech Logo">
-            <h3 style="margin-top: 8px; font-size: 1.1rem;">Arhivski Centar v7.0</h3>
+            <h3 style="margin-top: 8px; font-size: 1.1rem;">Arhivski Centar v7.1</h3>
         </div>
         <div class="menu-section">
             <button class="btn btn-blue" style="width:100%; margin-bottom:8px;" onclick="showPane('new-protocol-pane')">📁 Novi Protokol</button>
@@ -341,7 +341,10 @@
 
                     <!-- KORAK 1 -->
                     <div class="step-container active-step" id="step-1-view">
-                        <h4>Faza Kreative i Strukture Videa</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <h4>Faza Kreative i Strukture Videa</h4>
+                            <button class="btn btn-green" onclick="printVideoConceptualPlan()">🖨️ Odštampaj Konceptualno-Vizuelni Plan</button>
+                        </div>
                         <div class="form-group" style="margin-top:15px;">
                             <label>Naslov / Glavna Ideja Videa:</label>
                             <input type="text" id="v-title" placeholder="Npr. Testiram najbrži miš na svetu">
@@ -427,7 +430,6 @@
         let db = JSON.parse(localStorage.getItem('ognjen_v4_db')) || {};
         let activeProtocolId = null, activeDocumentIndex = null, selectedFolderColor = 'var(--folder-crvena)';
         
-        // Inicijalizacija novih struktura unutar baze bez kvarenja starih
         if (!db._videoProjects) db._videoProjects = [];
         if (!db._quickStories) db._quickStories = [];
 
@@ -711,7 +713,7 @@
 
         function saveToStorage() { localStorage.setItem('ognjen_v4_db', JSON.stringify(db)); }
 
-        /* ================== NOVI MODUL: VIDEO PRODUKCIJA ================== */
+        /* ================== MODUL: VIDEO PRODUKCIJA ================== */
         function openVideoProductionPane() {
             showPane('video-production-pane');
             buildProtocolSelectOptions();
@@ -801,6 +803,108 @@
                 db._videoProjects.splice(activeVideoIndex, 1); saveToStorage();
                 document.getElementById('video-wizard-zone').style.display = 'none';
                 renderVideoProjectsList();
+            }
+        }
+
+        /* FUNKCIJA ZA ŠTAMPU KONCEPTUALNO-VIZUELNOG PLANA */
+        function printVideoConceptualPlan() {
+            let title = document.getElementById('v-title').value.trim() || 'Novi Video Plan';
+            let hook = document.getElementById('v-hook').value.trim() || '___________________________';
+            let body = document.getElementById('v-body').value.trim() || '___________________________';
+            let cta = document.getElementById('v-cta').value.trim() || '___________________________';
+            let platform = document.getElementById('v-platform').value;
+            let linkedProto = document.getElementById('v-protocol-link').value || 'Nije povezano';
+
+            let printZone = document.getElementById('print-zone');
+            let stariSadrzaj = printZone.innerHTML;
+
+            printZone.innerHTML = `
+                <div class="doc-canvas" style="font-family:'Courier New', monospace; line-height: 1.5;">
+                    <div class="doc-system-header">
+                        <img src="profilna.png" alt="Ognjen Tech Logo">
+                        <div class="doc-header-info">
+                            <h2>Ognjen Filipović</h2>
+                            <p>Cybersecurity enthusiast & Tech Content Creator</p>
+                            <p>E-mail: ognjen.tech.contact@gmail.com | Tel: 0601979747</p>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align:center; margin-bottom:30px; font-weight:bold; font-size:1.3rem; text-transform: uppercase;">
+                        KONCEPTUALNO-VIZUELNI PLAN VIDEO MATERIJALA
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:25px; font-size:1rem;">
+                        <tr>
+                            <td style="padding:8px; border:1px solid #000; font-weight:bold; width:30%;">NASLOV / IDEJA:</td>
+                            <td style="padding:8px; border:1px solid #000; font-weight:bold;">${title.toUpperCase()}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:8px; border:1px solid #000; font-weight:bold;">PLATFORMA:</td>
+                            <td style="padding:8px; border:1px solid #000;">${platform}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:8px; border:1px solid #000; font-weight:bold;">ARHIVSKI PROTOKOL:</td>
+                            <td style="padding:8px; border:1px solid #000;">${linkedProto}</td>
+                        </tr>
+                    </table>
+
+                    <div style="margin-bottom:20px;">
+                        <span style="font-weight:bold; display:block; margin-bottom:5px;">🪝 UDICA (HOOK) - PRVE 3 SEKUNDE:</span>
+                        <div style="border:1px dashed #000; padding:10px; min-height:50px; background:#fafafa; white-space: pre-wrap;">${hook}</div>
+                    </div>
+
+                    <div style="margin-bottom:20px;">
+                        <span style="font-weight:bold; display:block; margin-bottom:5px;">📝 RAZRADA / SCENARIO / VIZUELNI TOK:</span>
+                        <div style="border:1px dashed #000; padding:10px; min-height:15px; background:#fafafa; white-space: pre-wrap;">${body}</div>
+                    </div>
+
+                    <div style="margin-bottom:30px;">
+                        <span style="font-weight:bold; display:block; margin-bottom:5px;">📢 POZIV NA AKCIJU (CTA):</span>
+                        <div style="border:1px dashed #000; padding:10px; min-height:50px; background:#fafafa; white-space: pre-wrap;">${cta}</div>
+                    </div>
+
+                    <div style="margin-top:30px; border-top:2px solid #000; padding-top:15px;">
+                        <span style="font-weight:bold; display:block; margin-bottom:10px;">📊 ANALITIKA I EVALUACIJA (BELEŽENJE NA TERENU):</span>
+                        <table style="width:100%; border-collapse:collapse; text-align:center;">
+                            <thead>
+                                <tr style="background:#eeeeee;">
+                                    <th style="border:1px solid #000; padding:6px;">VREMENSKA TAČKA</th>
+                                    <th style="border:1px solid #000; padding:6px;">PREGLEDI (VIEWS)</th>
+                                    <th style="border:1px solid #000; padding:6px;">LAJKOVI (LIKES)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border:1px solid #000; padding:10px; font-weight:bold;">NAKON 24 SATA</td>
+                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
+                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:1px solid #000; padding:10px; font-weight:bold;">NAKON 2 DANA</td>
+                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
+                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:1px solid #000; padding:10px; font-weight:bold;">NAKON 5 DANA</td>
+                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
+                                    <td style="border:1px solid #000; padding:10px;">___________________</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; margin-top:50px;">
+                        <div class="stamp-box">M.P.<br><br>OGNJEN TECH<br>PRODUKCIJA</div>
+                        <div style="text-align:right; align-self: flex-end;"><p>POTPIS PRODUCENTA:</p><br><p>___________________________</p></div>
+                    </div>
+                </div>`;
+
+            window.print();
+            printZone.innerHTML = stariSadrzaj;
+            
+            // Re-inicijalizacija prikaza dokumenta u editoru ako je bio otvoren
+            if(activeProtocolId && activeDocumentIndex !== null) {
+                loadDocumentIntoEditor(activeDocumentIndex);
             }
         }
 
